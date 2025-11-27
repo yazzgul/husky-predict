@@ -1,0 +1,1 @@
+export { DogAttributesList } from "./DogAttributesList";

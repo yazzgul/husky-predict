@@ -1,0 +1,1 @@
+export { PedigreeTree } from "./PedigreeTree";

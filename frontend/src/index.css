@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+.App {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Для корректного отображения SVG */
+.rd3t-tree-container {
+  width: 1200px !important;
+  height: 1200px !important;
+}
+/* this class is exposed by the react-d3 package I'm using */
+.path {
+  stroke-width: 3px;
+  fill: #797a7a;
+}
+#node.currentlySelected {
+  /* background-color: #97fbb6; */
+  border: 10px solid #7d4cdb;
+}
+#node:focus-visible {
+  border: 20px solid #97fbb6;
+  outline: none;
+}
+#dogDetails:focus-visible {
+  outline: 5px solid #97fbb6;
+  outline-offset: 5px;
+}
+Button.moveFocusButton {
+  color: #7d4cdb;
+  font-weight: 600;
+  /* the below code hides the button offscreen */
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+Button.moveFocusButton:focus {
+  /* the below code displays the button, but only when it's tabbed to */
+  position: static;
+  width: auto;
+  height: auto;
+}
+Button.moveFocusButton:hover {
+  text-decoration: underline;
+}
+
+/* scrollbar styles */
+body {
+  --sb-track-color: #dfe7df;
+  --sb-thumb-color: #232e33;
+  --sb-size: 6px;
+}
+
+::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 4px;
+}
+
+/* @supports not selector(::-webkit-scrollbar) {
+  .custom-scrollbar {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+} */

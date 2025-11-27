@@ -1,0 +1,2607 @@
+{
+   "name": "Phillip William Gilligan",
+   "attributes": {
+      "registrationNum": "PR23772310",
+      "registrationType": "AKC",
+      "sex": "Male",
+      "color": "Red",
+      "birthday": "3/9/2021",
+      "dnaInfo": "None",
+      "chicNum": "None",
+      "hips": "Unknown",
+      "ofaLink": "None",
+      "parent1RegistrationNum": "PR19520702",
+      "parent2RegistrationNum": "PR19917302"
+   },
+   "children": [
+      {
+         "name": "Sharmik's JJ'S Riley On The Edge",
+         "attributes": {
+            "registrationNum": "PR19520702",
+            "registrationType": "AKC",
+            "sex": "Female",
+            "color": "Black",
+            "birthday": "10/28/2016",
+            "dnaInfo": "None",
+            "chicNum": "137584",
+            "hips": "Good",
+            "ofaLink": "https://www.ofa.org/advanced-search?f=sr&appnum=2024788#",
+            "parent1RegistrationNum": "PR16837004",
+            "parent2RegistrationNum": "PR16278901"
+         },
+         "children": [
+            {
+               "name": "Touch O Class & Sharmik's Annie Get Ur Gun",
+               "attributes": {
+                  "registrationNum": "PR16837004",
+                  "registrationType": "AKC",
+                  "sex": "Female",
+                  "color": "Red",
+                  "birthday": "3/8/2013",
+                  "dnaInfo": "None",
+                  "chicNum": "107430",
+                  "hips": "Good",
+                  "ofaLink": "https://www.ofa.org/advanced-search?appnum=1649302",
+                  "parent1RegistrationNum": "PR09820906",
+                  "parent2RegistrationNum": "PR06651904"
+               },
+               "children": [
+                  {
+                     "name": "Ms Fergi A Dutchess At A Touch Of Class",
+                     "attributes": {
+                        "registrationNum": "PR09820906",
+                        "registrationType": "AKC",
+                        "sex": "Female",
+                        "color": "Red",
+                        "birthday": "3/16/2007",
+                        "dnaInfo": "None",
+                        "chicNum": "None",
+                        "hips": "Fair",
+                        "ofaLink": "https://www.ofa.org/advanced-search?appnum=1523756",
+                        "parent1RegistrationNum": "PR02254301",
+                        "parent2RegistrationNum": "PR07732403"
+                     },
+                     "children": [
+                        {
+                           "name": "Walter's Blazing Red Tasha",
+                           "attributes": {
+                              "registrationNum": "PR02254301",
+                              "registrationType": "AKC",
+                              "sex": "Female",
+                              "color": "Red",
+                              "birthday": "6/14/2003",
+                              "dnaInfo": "None",
+                              "chicNum": "None",
+                              "hips": "Unknown",
+                              "ofaLink": "None",
+                              "parent1RegistrationNum": "PP52198202",
+                              "parent2RegistrationNum": "PP56536803"
+                           },
+                           "children": [
+                              {
+                                 "name": "Walter's Golden Tangelo",
+                                 "attributes": {
+                                    "registrationNum": "PP52198202",
+                                    "registrationType": "AKC",
+                                    "sex": "Female",
+                                    "color": "Unknown",
+                                    "birthday": "Unknown",
+                                    "dnaInfo": "None",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "",
+                                    "parent1RegistrationNum": "PP45677503",
+                                    "parent2RegistrationNum": "PP49495801"
+                                 },
+                                 "children": [
+                                    {
+                                       "name": "Majestic Golden Tasha",
+                                       "attributes": {
+                                          "registrationNum": "PP45677503",
+                                          "registrationType": "",
+                                          "sex": "Female",
+                                          "color": "",
+                                          "birthday": "",
+                                          "dnaInfo": "",
+                                          "chicNum": "",
+                                          "hips": "",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "PP29189502",
+                                          "parent2RegistrationNum": "PP38447001"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "Sheila's Sweet Cinnamon",
+                                             "attributes": {
+                                                "registrationNum": "PP29189502",
+                                                "registrationType": "",
+                                                "sex": "Female",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PP09485201",
+                                                "parent2RegistrationNum": "PP25912301"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Majestic Cinnamon Lady",
+                                                   "attributes": {
+                                                      "registrationNum": "PP09485201",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Torbec Gold Medalist",
+                                                   "attributes": {
+                                                      "registrationNum": "PP25912301",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Jasler's Majestic Macho Man",
+                                             "attributes": {
+                                                "registrationNum": "PP38447001",
+                                                "registrationType": "",
+                                                "sex": "Male",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PP30887506",
+                                                "parent2RegistrationNum": "PB826550"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Majestic Topaz Velvet",
+                                                   "attributes": {
+                                                      "registrationNum": "PP30887506",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Coquetel Cavalier",
+                                                   "attributes": {
+                                                      "registrationNum": "PB826550",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          }
+                                       ]
+                                    },
+                                    {
+                                       "name": "Pierlyham Smalto Future Fire",
+                                       "attributes": {
+                                          "registrationNum": "PP49495801",
+                                          "registrationType": "",
+                                          "sex": "Male",
+                                          "color": "",
+                                          "birthday": "",
+                                          "dnaInfo": "",
+                                          "chicNum": "",
+                                          "hips": "",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "PP27639001",
+                                          "parent2RegistrationNum": "PP33473302"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "Torbec Hello Sunshine",
+                                             "attributes": {
+                                                "registrationNum": "PP27639001",
+                                                "registrationType": "",
+                                                "sex": "Female",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "TW632769",
+                                                "parent2RegistrationNum": "PP334620"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Torbec Let The Sunshine Win",
+                                                   "attributes": {
+                                                      "registrationNum": "TW632769",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Aurelia Torbec Triple Orange",
+                                                   "attributes": {
+                                                      "registrationNum": "PP334620",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Majestic Fire King",
+                                             "attributes": {
+                                                "registrationNum": "PP33473302",
+                                                "registrationType": "",
+                                                "sex": "Male",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PP24466004",
+                                                "parent2RegistrationNum": "PC091729"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Majestic Red Ruby",
+                                                   "attributes": {
+                                                      "registrationNum": "PP24466004",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "PC116298",
+                                                      "parent2RegistrationNum": "PC032452"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Majestic Miss Scarlet",
+                                                         "attributes": {
+                                                            "registrationNum": "PC116298",
+                                                            "registrationType": "",
+                                                            "sex": "Female",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB588535",
+                                                            "parent2RegistrationNum": "PC032452"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Tropicana Von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB588535",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Majestic Red Rebel Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PC032452",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "PB910122",
+                                                                  "parent2RegistrationNum": "PB815400"
+                                                               },
+                                                               "children": [
+                                                                  {
+                                                                     "name": "Love That Red von Shangri La",
+                                                                     "attributes": {
+                                                                        "registrationNum": "PB910122",
+                                                                        "registrationType": "",
+                                                                        "sex": "Female",
+                                                                        "color": "",
+                                                                        "birthday": "",
+                                                                        "dnaInfo": "",
+                                                                        "chicNum": "",
+                                                                        "hips": "",
+                                                                        "ofaLink": "",
+                                                                        "parent1RegistrationNum": "Unknown",
+                                                                        "parent2RegistrationNum": "Unknown"
+                                                                     },
+                                                                     "children": []
+                                                                  },
+                                                                  {
+                                                                     "name": "Coquetel Apollo",
+                                                                     "attributes": {
+                                                                        "registrationNum": "PB815400",
+                                                                        "registrationType": "",
+                                                                        "sex": "Male",
+                                                                        "color": "",
+                                                                        "birthday": "",
+                                                                        "dnaInfo": "",
+                                                                        "chicNum": "",
+                                                                        "hips": "",
+                                                                        "ofaLink": "",
+                                                                        "parent1RegistrationNum": "Unknown",
+                                                                        "parent2RegistrationNum": "Unknown"
+                                                                     },
+                                                                     "children": []
+                                                                  }
+                                                               ]
+                                                            }
+                                                         ]
+                                                      },
+                                                      {
+                                                         "name": "Majestic Red Rebel Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PC032452",
+                                                            "registrationType": "",
+                                                            "sex": "Male",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB910122",
+                                                            "parent2RegistrationNum": "PB815400"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Love That Red von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB910122",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Coquetel Apollo",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB815400",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                },
+                                                {
+                                                   "name": "Majestic Red Hot Shangri La",
+                                                   "attributes": {
+                                                      "registrationNum": "PC091729",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "PB629973",
+                                                      "parent2RegistrationNum": "PC016164"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Ravena von Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PB629973",
+                                                            "registrationType": "",
+                                                            "sex": "Female",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB587646",
+                                                            "parent2RegistrationNum": "PB370553"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Windspiel von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB587646",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Crown Prince von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB370553",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      },
+                                                      {
+                                                         "name": "Suntanned von Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PC016164",
+                                                            "registrationType": "",
+                                                            "sex": "Male",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB700953",
+                                                            "parent2RegistrationNum": "PB587807"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Sunrise Simone von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB700953",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Desert Lion von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB587807",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                }
+                                             ]
+                                          }
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {
+                                 "name": "Lemar's Flaming Red Fire",
+                                 "attributes": {
+                                    "registrationNum": "PP56536803",
+                                    "registrationType": "AKC",
+                                    "sex": "Male",
+                                    "color": "Red",
+                                    "birthday": "4/24/1998",
+                                    "dnaInfo": "AKC DNA #V174942",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "None",
+                                    "parent1RegistrationNum": "PP29715101",
+                                    "parent2RegistrationNum": "PP49495801"
+                                 },
+                                 "children": [
+                                    {
+                                       "name": "Majestic Averina's Red Crystal",
+                                       "attributes": {
+                                          "registrationNum": "PP29715101",
+                                          "registrationType": "",
+                                          "sex": "Female",
+                                          "color": "",
+                                          "birthday": "",
+                                          "dnaInfo": "",
+                                          "chicNum": "",
+                                          "hips": "",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "PC190401",
+                                          "parent2RegistrationNum": "PC032452"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "Averina's Majestic Minit Maid",
+                                             "attributes": {
+                                                "registrationNum": "PC190401",
+                                                "registrationType": "",
+                                                "sex": "Female",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PC166701",
+                                                "parent2RegistrationNum": "PB992727"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Westbays Merry Duchess",
+                                                   "attributes": {
+                                                      "registrationNum": "PC166701",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Majestic Mr Red von Shangri La",
+                                                   "attributes": {
+                                                      "registrationNum": "PB992727",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Majestic Red Rebel Shangri La",
+                                             "attributes": {
+                                                "registrationNum": "PC032452",
+                                                "registrationType": "",
+                                                "sex": "Male",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PB910122",
+                                                "parent2RegistrationNum": "PB815400"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Love That Red von Shangri La",
+                                                   "attributes": {
+                                                      "registrationNum": "PB910122",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Coquetel Apollo",
+                                                   "attributes": {
+                                                      "registrationNum": "PB815400",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          }
+                                       ]
+                                    },
+                                    {
+                                       "name": "Pierlyham Smalto Future Fire",
+                                       "attributes": {
+                                          "registrationNum": "PP49495801",
+                                          "registrationType": "",
+                                          "sex": "Male",
+                                          "color": "",
+                                          "birthday": "",
+                                          "dnaInfo": "",
+                                          "chicNum": "",
+                                          "hips": "",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "PP27639001",
+                                          "parent2RegistrationNum": "PP33473302"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "Torbec Hello Sunshine",
+                                             "attributes": {
+                                                "registrationNum": "PP27639001",
+                                                "registrationType": "",
+                                                "sex": "Female",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "TW632769",
+                                                "parent2RegistrationNum": "PP334620"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Torbec Let The Sunshine Win",
+                                                   "attributes": {
+                                                      "registrationNum": "TW632769",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Aurelia Torbec Triple Orange",
+                                                   "attributes": {
+                                                      "registrationNum": "PP334620",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Majestic Fire King",
+                                             "attributes": {
+                                                "registrationNum": "PP33473302",
+                                                "registrationType": "",
+                                                "sex": "Male",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PP24466004",
+                                                "parent2RegistrationNum": "PC091729"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Majestic Red Ruby",
+                                                   "attributes": {
+                                                      "registrationNum": "PP24466004",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "PC116298",
+                                                      "parent2RegistrationNum": "PC032452"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Majestic Miss Scarlet",
+                                                         "attributes": {
+                                                            "registrationNum": "PC116298",
+                                                            "registrationType": "",
+                                                            "sex": "Female",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB588535",
+                                                            "parent2RegistrationNum": "PC032452"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Tropicana Von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB588535",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Majestic Red Rebel Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PC032452",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "PB910122",
+                                                                  "parent2RegistrationNum": "PB815400"
+                                                               },
+                                                               "children": [
+                                                                  {
+                                                                     "name": "Love That Red von Shangri La",
+                                                                     "attributes": {
+                                                                        "registrationNum": "PB910122",
+                                                                        "registrationType": "",
+                                                                        "sex": "Female",
+                                                                        "color": "",
+                                                                        "birthday": "",
+                                                                        "dnaInfo": "",
+                                                                        "chicNum": "",
+                                                                        "hips": "",
+                                                                        "ofaLink": "",
+                                                                        "parent1RegistrationNum": "Unknown",
+                                                                        "parent2RegistrationNum": "Unknown"
+                                                                     },
+                                                                     "children": []
+                                                                  },
+                                                                  {
+                                                                     "name": "Coquetel Apollo",
+                                                                     "attributes": {
+                                                                        "registrationNum": "PB815400",
+                                                                        "registrationType": "",
+                                                                        "sex": "Male",
+                                                                        "color": "",
+                                                                        "birthday": "",
+                                                                        "dnaInfo": "",
+                                                                        "chicNum": "",
+                                                                        "hips": "",
+                                                                        "ofaLink": "",
+                                                                        "parent1RegistrationNum": "Unknown",
+                                                                        "parent2RegistrationNum": "Unknown"
+                                                                     },
+                                                                     "children": []
+                                                                  }
+                                                               ]
+                                                            }
+                                                         ]
+                                                      },
+                                                      {
+                                                         "name": "Majestic Red Rebel Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PC032452",
+                                                            "registrationType": "",
+                                                            "sex": "Male",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB910122",
+                                                            "parent2RegistrationNum": "PB815400"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Love That Red von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB910122",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Coquetel Apollo",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB815400",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                },
+                                                {
+                                                   "name": "Majestic Red Hot Shangri La",
+                                                   "attributes": {
+                                                      "registrationNum": "PC091729",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "PB629973",
+                                                      "parent2RegistrationNum": "PC016164"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Ravena von Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PB629973",
+                                                            "registrationType": "",
+                                                            "sex": "Female",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB587646",
+                                                            "parent2RegistrationNum": "PB370553"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Windspiel von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB587646",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Crown Prince von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB370553",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      },
+                                                      {
+                                                         "name": "Suntanned von Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PC016164",
+                                                            "registrationType": "",
+                                                            "sex": "Male",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB700953",
+                                                            "parent2RegistrationNum": "PB587807"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Sunrise Simone von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB700953",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Desert Lion von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB587807",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                }
+                                             ]
+                                          }
+                                       ]
+                                    }
+                                 ]
+                              }
+                           ]
+                        },
+                        {
+                           "name": "Lemars Touch Of Class Red Pepper",
+                           "attributes": {
+                              "registrationNum": "PR07732403",
+                              "registrationType": "AKC",
+                              "sex": "Male",
+                              "color": "Red",
+                              "birthday": "11/13/2005",
+                              "dnaInfo": "AKC DNA #V468184",
+                              "chicNum": "None",
+                              "hips": "Good",
+                              "ofaLink": "https://www.ofa.org/advanced-search?appnum=1610703",
+                              "parent1RegistrationNum": "PP57734303",
+                              "parent2RegistrationNum": "PP56536803"
+                           },
+                           "children": [
+                              {
+                                 "name": "Sunkist Miss Ginger Of Lemar",
+                                 "attributes": {
+                                    "registrationNum": "PP57734303",
+                                    "registrationType": "AKC",
+                                    "sex": "Female",
+                                    "color": "Red",
+                                    "birthday": "10/1/1998",
+                                    "dnaInfo": "None",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "None",
+                                    "parent1RegistrationNum": "Unknown",
+                                    "parent2RegistrationNum": "Unknown"
+                                 },
+                                 "children": []
+                              },
+                              {
+                                 "name": "Lemar's Flaming Red Fire",
+                                 "attributes": {
+                                    "registrationNum": "PP56536803",
+                                    "registrationType": "AKC",
+                                    "sex": "Male",
+                                    "color": "Red",
+                                    "birthday": "4/24/1998",
+                                    "dnaInfo": "AKC DNA #V174942",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "None",
+                                    "parent1RegistrationNum": "PP29715101",
+                                    "parent2RegistrationNum": "PP49495801"
+                                 },
+                                 "children": [
+                                    {
+                                       "name": "Majestic Averina's Red Crystal",
+                                       "attributes": {
+                                          "registrationNum": "PP29715101",
+                                          "registrationType": "",
+                                          "sex": "Female",
+                                          "color": "",
+                                          "birthday": "",
+                                          "dnaInfo": "",
+                                          "chicNum": "",
+                                          "hips": "",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "PC190401",
+                                          "parent2RegistrationNum": "PC032452"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "Averina's Majestic Minit Maid",
+                                             "attributes": {
+                                                "registrationNum": "PC190401",
+                                                "registrationType": "",
+                                                "sex": "Female",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PC166701",
+                                                "parent2RegistrationNum": "PB992727"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Westbays Merry Duchess",
+                                                   "attributes": {
+                                                      "registrationNum": "PC166701",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Majestic Mr Red von Shangri La",
+                                                   "attributes": {
+                                                      "registrationNum": "PB992727",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Majestic Red Rebel Shangri La",
+                                             "attributes": {
+                                                "registrationNum": "PC032452",
+                                                "registrationType": "",
+                                                "sex": "Male",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PB910122",
+                                                "parent2RegistrationNum": "PB815400"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Love That Red von Shangri La",
+                                                   "attributes": {
+                                                      "registrationNum": "PB910122",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Coquetel Apollo",
+                                                   "attributes": {
+                                                      "registrationNum": "PB815400",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          }
+                                       ]
+                                    },
+                                    {
+                                       "name": "Pierlyham Smalto Future Fire",
+                                       "attributes": {
+                                          "registrationNum": "PP49495801",
+                                          "registrationType": "",
+                                          "sex": "Male",
+                                          "color": "",
+                                          "birthday": "",
+                                          "dnaInfo": "",
+                                          "chicNum": "",
+                                          "hips": "",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "PP27639001",
+                                          "parent2RegistrationNum": "PP33473302"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "Torbec Hello Sunshine",
+                                             "attributes": {
+                                                "registrationNum": "PP27639001",
+                                                "registrationType": "",
+                                                "sex": "Female",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "TW632769",
+                                                "parent2RegistrationNum": "PP334620"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Torbec Let The Sunshine Win",
+                                                   "attributes": {
+                                                      "registrationNum": "TW632769",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Aurelia Torbec Triple Orange",
+                                                   "attributes": {
+                                                      "registrationNum": "PP334620",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Majestic Fire King",
+                                             "attributes": {
+                                                "registrationNum": "PP33473302",
+                                                "registrationType": "",
+                                                "sex": "Male",
+                                                "color": "",
+                                                "birthday": "",
+                                                "dnaInfo": "",
+                                                "chicNum": "",
+                                                "hips": "",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "PP24466004",
+                                                "parent2RegistrationNum": "PC091729"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Majestic Red Ruby",
+                                                   "attributes": {
+                                                      "registrationNum": "PP24466004",
+                                                      "registrationType": "",
+                                                      "sex": "Female",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "PC116298",
+                                                      "parent2RegistrationNum": "PC032452"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Majestic Miss Scarlet",
+                                                         "attributes": {
+                                                            "registrationNum": "PC116298",
+                                                            "registrationType": "",
+                                                            "sex": "Female",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB588535",
+                                                            "parent2RegistrationNum": "PC032452"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Tropicana Von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB588535",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Majestic Red Rebel Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PC032452",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "PB910122",
+                                                                  "parent2RegistrationNum": "PB815400"
+                                                               },
+                                                               "children": [
+                                                                  {
+                                                                     "name": "Love That Red von Shangri La",
+                                                                     "attributes": {
+                                                                        "registrationNum": "PB910122",
+                                                                        "registrationType": "",
+                                                                        "sex": "Female",
+                                                                        "color": "",
+                                                                        "birthday": "",
+                                                                        "dnaInfo": "",
+                                                                        "chicNum": "",
+                                                                        "hips": "",
+                                                                        "ofaLink": "",
+                                                                        "parent1RegistrationNum": "Unknown",
+                                                                        "parent2RegistrationNum": "Unknown"
+                                                                     },
+                                                                     "children": []
+                                                                  },
+                                                                  {
+                                                                     "name": "Coquetel Apollo",
+                                                                     "attributes": {
+                                                                        "registrationNum": "PB815400",
+                                                                        "registrationType": "",
+                                                                        "sex": "Male",
+                                                                        "color": "",
+                                                                        "birthday": "",
+                                                                        "dnaInfo": "",
+                                                                        "chicNum": "",
+                                                                        "hips": "",
+                                                                        "ofaLink": "",
+                                                                        "parent1RegistrationNum": "Unknown",
+                                                                        "parent2RegistrationNum": "Unknown"
+                                                                     },
+                                                                     "children": []
+                                                                  }
+                                                               ]
+                                                            }
+                                                         ]
+                                                      },
+                                                      {
+                                                         "name": "Majestic Red Rebel Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PC032452",
+                                                            "registrationType": "",
+                                                            "sex": "Male",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB910122",
+                                                            "parent2RegistrationNum": "PB815400"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Love That Red von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB910122",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Coquetel Apollo",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB815400",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                },
+                                                {
+                                                   "name": "Majestic Red Hot Shangri La",
+                                                   "attributes": {
+                                                      "registrationNum": "PC091729",
+                                                      "registrationType": "",
+                                                      "sex": "Male",
+                                                      "color": "",
+                                                      "birthday": "",
+                                                      "dnaInfo": "",
+                                                      "chicNum": "",
+                                                      "hips": "",
+                                                      "ofaLink": "",
+                                                      "parent1RegistrationNum": "PB629973",
+                                                      "parent2RegistrationNum": "PC016164"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Ravena von Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PB629973",
+                                                            "registrationType": "",
+                                                            "sex": "Female",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB587646",
+                                                            "parent2RegistrationNum": "PB370553"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Windspiel von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB587646",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Crown Prince von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB370553",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      },
+                                                      {
+                                                         "name": "Suntanned von Shangri La",
+                                                         "attributes": {
+                                                            "registrationNum": "PC016164",
+                                                            "registrationType": "",
+                                                            "sex": "Male",
+                                                            "color": "",
+                                                            "birthday": "",
+                                                            "dnaInfo": "",
+                                                            "chicNum": "",
+                                                            "hips": "",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "PB700953",
+                                                            "parent2RegistrationNum": "PB587807"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Sunrise Simone von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB700953",
+                                                                  "registrationType": "",
+                                                                  "sex": "Female",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Desert Lion von Shangri La",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB587807",
+                                                                  "registrationType": "",
+                                                                  "sex": "Male",
+                                                                  "color": "",
+                                                                  "birthday": "",
+                                                                  "dnaInfo": "",
+                                                                  "chicNum": "",
+                                                                  "hips": "",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                }
+                                             ]
+                                          }
+                                       ]
+                                    }
+                                 ]
+                              }
+                           ]
+                        }
+                     ]
+                  },
+                  {
+                     "name": "President Lincoln Of Arroyo",
+                     "attributes": {
+                        "registrationNum": "PR06651904",
+                        "registrationType": "AKC",
+                        "sex": "Male",
+                        "color": "Apricot",
+                        "birthday": "6/15/2005",
+                        "dnaInfo": "AKC DNA #V583386",
+                        "chicNum": "46304",
+                        "hips": "Fair",
+                        "ofaLink": "https://www.ofa.org/advanced-search?appnum=1228756",
+                        "parent1RegistrationNum": "PR03506801",
+                        "parent2RegistrationNum": "PR03773207"
+                     },
+                     "children": [
+                        {
+                           "name": "Victoria Pierre Elegant Copy",
+                           "attributes": {
+                              "registrationNum": "PR03506801",
+                              "registrationType": "AKC",
+                              "sex": "Female",
+                              "color": "Brown",
+                              "birthday": "8/16/2003",
+                              "dnaInfo": "None",
+                              "chicNum": "None",
+                              "hips": "Unknown",
+                              "ofaLink": "None",
+                              "parent1RegistrationNum": "Unknown",
+                              "parent2RegistrationNum": "Unknown"
+                           },
+                           "children": []
+                        },
+                        {
+                           "name": "Mr Christal's He Is A Realgem",
+                           "attributes": {
+                              "registrationNum": "PR03773207",
+                              "registrationType": "AKC",
+                              "sex": "Male",
+                              "color": "Apricot",
+                              "birthday": "1/18/2004",
+                              "dnaInfo": "AKC DNA #V402801",
+                              "chicNum": "None",
+                              "hips": "Unknown",
+                              "ofaLink": "None",
+                              "parent1RegistrationNum": "Unknown",
+                              "parent2RegistrationNum": "Unknown"
+                           },
+                           "children": []
+                        }
+                     ]
+                  }
+               ]
+            },
+            {
+               "name": "Sharmik's Black Night",
+               "attributes": {
+                  "registrationNum": "PR16278901",
+                  "registrationType": "AKC",
+                  "sex": "Male",
+                  "color": "Black",
+                  "birthday": "6/10/2012",
+                  "dnaInfo": "AKC DNA #V765284",
+                  "chicNum": "111731",
+                  "hips": "Excellent",
+                  "ofaLink": "https://www.ofa.org/advanced-search?appnum=1630698",
+                  "parent1RegistrationNum": "Unknown",
+                  "parent2RegistrationNum": "Unknown"
+               },
+               "children": []
+            }
+         ]
+      },
+      {
+         "name": "Heavenly Touch Of Crimson Red",
+         "attributes": {
+            "registrationNum": "PR19917302",
+            "registrationType": "AKC",
+            "sex": "Male",
+            "color": "Red",
+            "birthday": "4/5/2017",
+            "dnaInfo": "None",
+            "chicNum": "None",
+            "hips": "Fair",
+            "ofaLink": "https://www.ofa.org/advanced-search?f=sr&appnum=2177535#",
+            "parent1RegistrationNum": "PR17396205",
+            "parent2RegistrationNum": "PR17970506"
+         },
+         "children": [
+            {
+               "name": "Heavenly Zandra",
+               "attributes": {
+                  "registrationNum": "PR17396205",
+                  "registrationType": "AKC",
+                  "sex": "Female",
+                  "color": "Red & Apricot",
+                  "birthday": "12/22/2013",
+                  "dnaInfo": "None",
+                  "chicNum": "None",
+                  "hips": "Unknown",
+                  "ofaLink": "https://www.ofa.org/advanced-search?appnum=1765443",
+                  "parent1RegistrationNum": "PR16087001",
+                  "parent2RegistrationNum": "PR16086901"
+               },
+               "children": [
+                  {
+                     "name": "Cantope's Heavenly Zena",
+                     "attributes": {
+                        "registrationNum": "PR16087001",
+                        "registrationType": "AKC",
+                        "sex": "Female",
+                        "color": "Red",
+                        "birthday": "5/28/2010",
+                        "dnaInfo": "AKC DNA #V664128",
+                        "chicNum": "None",
+                        "hips": "Unknown",
+                        "ofaLink": "",
+                        "parent1RegistrationNum": "Unknown",
+                        "parent2RegistrationNum": "Unknown"
+                     },
+                     "children": []
+                  },
+                  {
+                     "name": "Cantope's Heavenly Zachary",
+                     "attributes": {
+                        "registrationNum": "PR16086901",
+                        "registrationType": "AKC",
+                        "sex": "Male",
+                        "color": "Apricot",
+                        "birthday": "4/20/2010",
+                        "dnaInfo": "AKC DNA #V664129",
+                        "chicNum": "None",
+                        "hips": "Good",
+                        "ofaLink": "https://www.ofa.org/advanced-search?appnum=1576233",
+                        "parent1RegistrationNum": "TQ175114",
+                        "parent2RegistrationNum": "SW134700"
+                     },
+                     "children": [
+                        {
+                           "name": "Cantope Lady In Red",
+                           "attributes": {
+                              "registrationNum": "TQ175114",
+                              "registrationType": "CKC",
+                              "sex": "Female",
+                              "color": "Unknown",
+                              "birthday": "8/15/2007",
+                              "dnaInfo": "Unknown",
+                              "chicNum": "None",
+                              "hips": "Unknown",
+                              "ofaLink": "https://www.ofa.org/advanced-search?appnum=989005",
+                              "parent1RegistrationNum": "Unknown",
+                              "parent2RegistrationNum": "Unknown"
+                           },
+                           "children": []
+                        },
+                        {
+                           "name": "Cantope Zoric Maximus",
+                           "attributes": {
+                              "registrationNum": "SW134700",
+                              "registrationType": "CKC",
+                              "sex": "Male",
+                              "color": "Apricot",
+                              "birthday": "11/9/2006",
+                              "dnaInfo": "Unknown",
+                              "chicNum": "None",
+                              "hips": "Excellent",
+                              "ofaLink": "https://www.ofa.org/advanced-search?appnum=1347984",
+                              "parent1RegistrationNum": "RJ031998",
+                              "parent2RegistrationNum": "1085035"
+                           },
+                           "children": [
+                              {
+                                 "name": "Cantope Ebony Zoe Paquette",
+                                 "attributes": {
+                                    "registrationNum": "RJ031998",
+                                    "registrationType": "CKC",
+                                    "sex": "Female",
+                                    "color": "Unknown",
+                                    "birthday": "Unknown",
+                                    "dnaInfo": "Unknown",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "",
+                                    "parent1RegistrationNum": "Unknown",
+                                    "parent2RegistrationNum": "Unknown"
+                                 },
+                                 "children": []
+                              },
+                              {
+                                 "name": "Unknown",
+                                 "attributes": {
+                                    "registrationNum": "1085035",
+                                    "registrationType": "Unknown",
+                                    "sex": "Male",
+                                    "color": "Unknown",
+                                    "birthday": "Unknown",
+                                    "dnaInfo": "Unknown",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "",
+                                    "parent1RegistrationNum": "Unknown",
+                                    "parent2RegistrationNum": "Unknown"
+                                 },
+                                 "children": []
+                              }
+                           ]
+                        }
+                     ]
+                  }
+               ]
+            },
+            {
+               "name": "Heavenly Roscoe",
+               "attributes": {
+                  "registrationNum": "PR17970506",
+                  "registrationType": "AKC",
+                  "sex": "Male",
+                  "color": "Red",
+                  "birthday": "9/22/2014",
+                  "dnaInfo": "AKC DNA #V780168",
+                  "chicNum": "None",
+                  "hips": "Unknown",
+                  "ofaLink": "https://www.ofa.org/advanced-search?appnum=1765445",
+                  "parent1RegistrationNum": "PR15687101",
+                  "parent2RegistrationNum": "PR16479603"
+               },
+               "children": [
+                  {
+                     "name": "Silverace's Baby Maggie May",
+                     "attributes": {
+                        "registrationNum": "PR15687101",
+                        "registrationType": "AKC",
+                        "sex": "Female",
+                        "color": "Red",
+                        "birthday": "11/8/2011",
+                        "dnaInfo": "None",
+                        "chicNum": "None",
+                        "hips": "Good",
+                        "ofaLink": "https://www.ofa.org/advanced-search?appnum=1633900",
+                        "parent1RegistrationNum": "PR13935707",
+                        "parent2RegistrationNum": "PR10664503"
+                     },
+                     "children": [
+                        {
+                           "name": "Miss Lolli Lolli Pop Jo",
+                           "attributes": {
+                              "registrationNum": "PR13935707",
+                              "registrationType": "AKC",
+                              "sex": "Female",
+                              "color": "Red",
+                              "birthday": "12/16/2009",
+                              "dnaInfo": "None",
+                              "chicNum": "86343",
+                              "hips": "Fair",
+                              "ofaLink": "https://www.ofa.org/advanced-search?appnum=1515739",
+                              "parent1RegistrationNum": "PR12382805",
+                              "parent2RegistrationNum": "PR12467908"
+                           },
+                           "children": [
+                              {
+                                 "name": "Tootsie Boo Boo Of Leatherstocking",
+                                 "attributes": {
+                                    "registrationNum": "PR12382805",
+                                    "registrationType": "AKC",
+                                    "sex": "Female",
+                                    "color": "Apricot",
+                                    "birthday": "10/27/2008",
+                                    "dnaInfo": "None",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "",
+                                    "parent1RegistrationNum": "Unknown",
+                                    "parent2RegistrationNum": "Unknown"
+                                 },
+                                 "children": []
+                              },
+                              {
+                                 "name": "Sir Luke Of Leatherstocking",
+                                 "attributes": {
+                                    "registrationNum": "PR12467908",
+                                    "registrationType": "AKC",
+                                    "sex": "Male",
+                                    "color": "Red",
+                                    "birthday": "11/11/2008",
+                                    "dnaInfo": "AKC DNA #V652076",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "https://www.ofa.org/advanced-search?appnum=1487321",
+                                    "parent1RegistrationNum": "PR02244909",
+                                    "parent2RegistrationNum": "PR03335206"
+                                 },
+                                 "children": [
+                                    {
+                                       "name": "Leatherstockin's Raspberry",
+                                       "attributes": {
+                                          "registrationNum": "PR02244909",
+                                          "registrationType": "AKC",
+                                          "sex": "Female",
+                                          "color": "Red",
+                                          "birthday": "6/7/2003",
+                                          "dnaInfo": "None",
+                                          "chicNum": "None",
+                                          "hips": "Unknown",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "Unknown",
+                                          "parent2RegistrationNum": "Unknown"
+                                       },
+                                       "children": []
+                                    },
+                                    {
+                                       "name": "Leatherstocking Coppercoopper",
+                                       "attributes": {
+                                          "registrationNum": "PR03335206",
+                                          "registrationType": "AKC",
+                                          "sex": "Male",
+                                          "color": "Red",
+                                          "birthday": "11/8/2003",
+                                          "dnaInfo": "AKC DNA #V409962",
+                                          "chicNum": "None",
+                                          "hips": "Unknown",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "Unknown",
+                                          "parent2RegistrationNum": "Unknown"
+                                       },
+                                       "children": []
+                                    }
+                                 ]
+                              }
+                           ]
+                        },
+                        {
+                           "name": "Butler's Baby Cooper",
+                           "attributes": {
+                              "registrationNum": "PR10664503",
+                              "registrationType": "AKC",
+                              "sex": "Male",
+                              "color": "Red",
+                              "birthday": "9/6/2007",
+                              "dnaInfo": "None",
+                              "chicNum": "None",
+                              "hips": "Unknown",
+                              "ofaLink": "",
+                              "parent1RegistrationNum": "Unknown",
+                              "parent2RegistrationNum": "Unknown"
+                           },
+                           "children": []
+                        }
+                     ]
+                  },
+                  {
+                     "name": "Payden Cash Redz Jamaica Me Happy",
+                     "attributes": {
+                        "registrationNum": "PR16479603",
+                        "registrationType": "AKC",
+                        "sex": "Male",
+                        "color": "Red",
+                        "birthday": "8/31/2012",
+                        "dnaInfo": "AKC DNA #V726594",
+                        "chicNum": "101894",
+                        "hips": "Good",
+                        "ofaLink": "https://www.ofa.org/advanced-search?appnum=1553980",
+                        "parent1RegistrationNum": "PR11944102",
+                        "parent2RegistrationNum": "PR14323903"
+                     },
+                     "children": [
+                        {
+                           "name": "Semonile Lady Of The Night \"Eboni\"",
+                           "attributes": {
+                              "registrationNum": "PR11944102",
+                              "registrationType": "AKC",
+                              "sex": "Female",
+                              "color": "Black",
+                              "birthday": "7/21/2008",
+                              "dnaInfo": "None",
+                              "chicNum": "None",
+                              "hips": "Fair",
+                              "ofaLink": "https://www.ofa.org/advanced-search?appnum=1477576",
+                              "parent1RegistrationNum": "PR07821005",
+                              "parent2RegistrationNum": "PR09389306"
+                           },
+                           "children": [
+                              {
+                                 "name": "Ami A Maya",
+                                 "attributes": {
+                                    "registrationNum": "PR07821005",
+                                    "registrationType": "AKC",
+                                    "sex": "Female",
+                                    "color": "Black",
+                                    "birthday": "2/21/2006",
+                                    "dnaInfo": "None",
+                                    "chicNum": "51730",
+                                    "hips": "Good",
+                                    "ofaLink": "https://www.ofa.org/advanced-search?appnum=1309069",
+                                    "parent1RegistrationNum": "PR01965808",
+                                    "parent2RegistrationNum": "PP64726509"
+                                 },
+                                 "children": [
+                                    {
+                                       "name": "Ruby Red O'Shannon",
+                                       "attributes": {
+                                          "registrationNum": "PR01965808",
+                                          "registrationType": "AKC",
+                                          "sex": "Female",
+                                          "color": "Red",
+                                          "birthday": "4/17/2003",
+                                          "dnaInfo": "None",
+                                          "chicNum": "None",
+                                          "hips": "Unknown",
+                                          "ofaLink": "https://www.ofa.org/advanced-search?appnum=1134755",
+                                          "parent1RegistrationNum": "PR00288710",
+                                          "parent2RegistrationNum": "PP54354607"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "Roux Bijou",
+                                             "attributes": {
+                                                "registrationNum": "PR00288710",
+                                                "registrationType": "AKC",
+                                                "sex": "Female",
+                                                "color": "Red",
+                                                "birthday": "4/7/2002",
+                                                "dnaInfo": "None",
+                                                "chicNum": "36028",
+                                                "hips": "Pennhip LDI=.28 RDI=.28",
+                                                "ofaLink": "https://www.ofa.org/advanced-search?appnum=1085043",
+                                                "parent1RegistrationNum": "PP58102005",
+                                                "parent2RegistrationNum": "PP48210702"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Bijou Noire XIII",
+                                                   "attributes": {
+                                                      "registrationNum": "PP58102005",
+                                                      "registrationType": "AKC",
+                                                      "sex": "Female",
+                                                      "color": "Black",
+                                                      "birthday": "3/9/1999",
+                                                      "dnaInfo": "None",
+                                                      "chicNum": "None",
+                                                      "hips": "Unknown",
+                                                      "ofaLink": "https://www.ofa.org/advanced-search?appnum=1080310",
+                                                      "parent1RegistrationNum": "PP46644001",
+                                                      "parent2RegistrationNum": "PP38730404"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Hannah's Ebony Destiny",
+                                                         "attributes": {
+                                                            "registrationNum": "PP46644001",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Female",
+                                                            "color": "Black",
+                                                            "birthday": "9/1/1995",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "Unknown",
+                                                            "parent2RegistrationNum": "Unknown"
+                                                         },
+                                                         "children": []
+                                                      },
+                                                      {
+                                                         "name": "Torbec's Big Red Baby",
+                                                         "attributes": {
+                                                            "registrationNum": "PP38730404",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Male",
+                                                            "color": "Apricot",
+                                                            "birthday": "8/27/1993",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "Unknown",
+                                                            "parent2RegistrationNum": "Unknown"
+                                                         },
+                                                         "children": []
+                                                      }
+                                                   ]
+                                                },
+                                                {
+                                                   "name": "Mon Ami Le Bon Retrouver",
+                                                   "attributes": {
+                                                      "registrationNum": "PP48210702",
+                                                      "registrationType": "AKC",
+                                                      "sex": "Male",
+                                                      "color": "Black",
+                                                      "birthday": "5/2/1996",
+                                                      "dnaInfo": "AKC DNA #V165848",
+                                                      "chicNum": "15914",
+                                                      "hips": "Good",
+                                                      "ofaLink": "https://www.ofa.org/advanced-search?appnum=726012",
+                                                      "parent1RegistrationNum": "PP29133308",
+                                                      "parent2RegistrationNum": "PP24896303"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Nadeaus Daisy In Bloom",
+                                                         "attributes": {
+                                                            "registrationNum": "PP29133308",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Female",
+                                                            "color": "Black",
+                                                            "birthday": "5/6/1991",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "Unknown",
+                                                            "parent2RegistrationNum": "Unknown"
+                                                         },
+                                                         "children": []
+                                                      },
+                                                      {
+                                                         "name": "Triumph's Gallant Chevalier",
+                                                         "attributes": {
+                                                            "registrationNum": "PP24896303",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Male",
+                                                            "color": "Apricot",
+                                                            "birthday": "7/15/1990",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "Unknown",
+                                                            "parent2RegistrationNum": "Unknown"
+                                                         },
+                                                         "children": []
+                                                      }
+                                                   ]
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Gus Gus O'Shannon",
+                                             "attributes": {
+                                                "registrationNum": "PP54354607",
+                                                "registrationType": "AKC",
+                                                "sex": "Male",
+                                                "color": "Red",
+                                                "birthday": "1/23/1998",
+                                                "dnaInfo": "AKC DNA #V265726",
+                                                "chicNum": "None",
+                                                "hips": "Unknown",
+                                                "ofaLink": "",
+                                                "parent1RegistrationNum": "Unknown",
+                                                "parent2RegistrationNum": "Unknown"
+                                             },
+                                             "children": []
+                                          }
+                                       ]
+                                    },
+                                    {
+                                       "name": "Friendships Shiloh Garden",
+                                       "attributes": {
+                                          "registrationNum": "PP64726509",
+                                          "registrationType": "AKC",
+                                          "sex": "Male",
+                                          "color": "Brown",
+                                          "birthday": "4/21/2001",
+                                          "dnaInfo": "AKC DNA #V241802",
+                                          "chicNum": "None",
+                                          "hips": "Unknown",
+                                          "ofaLink": "https://www.ofa.org/advanced-search?appnum=921777",
+                                          "parent1RegistrationNum": "PP54169214",
+                                          "parent2RegistrationNum": "PP45058008"
+                                       },
+                                       "children": [
+                                          {
+                                             "name": "MKM Friendships Joyous Noel",
+                                             "attributes": {
+                                                "registrationNum": "PP54169214",
+                                                "registrationType": "AKC",
+                                                "sex": "Female",
+                                                "color": "Apricot",
+                                                "birthday": "1/10/1998",
+                                                "dnaInfo": "None",
+                                                "chicNum": "None",
+                                                "hips": "Good",
+                                                "ofaLink": "https://www.ofa.org/advanced-search?appnum=811523",
+                                                "parent1RegistrationNum": "PP48368713",
+                                                "parent2RegistrationNum": "PP43434103"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Friendships MKM Ladywind Too",
+                                                   "attributes": {
+                                                      "registrationNum": "PP48368713",
+                                                      "registrationType": "AKC",
+                                                      "sex": "Female",
+                                                      "color": "Cream",
+                                                      "birthday": "5/14/1996",
+                                                      "dnaInfo": "AKC DNA #V260558",
+                                                      "chicNum": "None",
+                                                      "hips": "Unknown",
+                                                      "ofaLink": "https://www.ofa.org/advanced-search?appnum=687367",
+                                                      "parent1RegistrationNum": "PP36594816",
+                                                      "parent2RegistrationNum": "PP45272905"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Friendships Cassandra Too",
+                                                         "attributes": {
+                                                            "registrationNum": "PP36594816",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Female",
+                                                            "color": "Apricot",
+                                                            "birthday": "3/7/1993",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "https://www.ofa.org/advanced-search?appnum=679084",
+                                                            "parent1RegistrationNum": "PC242263",
+                                                            "parent2RegistrationNum": "PP25091303"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Hendrickson's Cassandra",
+                                                               "attributes": {
+                                                                  "registrationNum": "PC242263",
+                                                                  "registrationType": "AKC",
+                                                                  "sex": "Female",
+                                                                  "color": "Brown",
+                                                                  "birthday": "11/16/1989",
+                                                                  "dnaInfo": "None",
+                                                                  "chicNum": "None",
+                                                                  "hips": "Unknown",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Wewin's Mon'amie",
+                                                               "attributes": {
+                                                                  "registrationNum": "PP25091303",
+                                                                  "registrationType": "AKC",
+                                                                  "sex": "Male",
+                                                                  "color": "Black",
+                                                                  "birthday": "7/12/1990",
+                                                                  "dnaInfo": "None",
+                                                                  "chicNum": "None",
+                                                                  "hips": "Unknown",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      },
+                                                      {
+                                                         "name": "Friendships Viking Ravenwind",
+                                                         "attributes": {
+                                                            "registrationNum": "PP45272905",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Male",
+                                                            "color": "Black",
+                                                            "birthday": "7/3/1995",
+                                                            "dnaInfo": "AKC DNA #V182977",
+                                                            "chicNum": "14843",
+                                                            "hips": "Affected",
+                                                            "ofaLink": "https://www.ofa.org/advanced-search?appnum=679083",
+                                                            "parent1RegistrationNum": "PP36301201",
+                                                            "parent2RegistrationNum": "PC222475"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Lady Bess Of Bath",
+                                                               "attributes": {
+                                                                  "registrationNum": "PP36301201",
+                                                                  "registrationType": "AKC",
+                                                                  "sex": "Female",
+                                                                  "color": "Black",
+                                                                  "birthday": "7/15/1988",
+                                                                  "dnaInfo": "None",
+                                                                  "chicNum": "None",
+                                                                  "hips": "Unknown",
+                                                                  "ofaLink": "",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "Brandy's Alexander VII",
+                                                               "attributes": {
+                                                                  "registrationNum": "PC222475",
+                                                                  "registrationType": "AKC",
+                                                                  "sex": "Male",
+                                                                  "color": "Black",
+                                                                  "birthday": "7/25/1989",
+                                                                  "dnaInfo": "AKC DNA #V59415",
+                                                                  "chicNum": "None",
+                                                                  "hips": "Good",
+                                                                  "ofaLink": "https://www.ofa.org/advanced-search?appnum=410192",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                },
+                                                {
+                                                   "name": "Friendships Raiding Saxon",
+                                                   "attributes": {
+                                                      "registrationNum": "PP43434103",
+                                                      "registrationType": "AKC",
+                                                      "sex": "Male",
+                                                      "color": "Black",
+                                                      "birthday": "1/10/1995",
+                                                      "dnaInfo": "AKC DNA #V182976",
+                                                      "chicNum": "None",
+                                                      "hips": "Good",
+                                                      "ofaLink": "https://www.ofa.org/advanced-search?appnum=663759",
+                                                      "parent1RegistrationNum": "PP26696902",
+                                                      "parent2RegistrationNum": "PP24559601"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Prima Hollie Tenere",
+                                                         "attributes": {
+                                                            "registrationNum": "PP26696902",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Female",
+                                                            "color": "Apricot",
+                                                            "birthday": "11/6/1990",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "Unknown",
+                                                            "parent2RegistrationNum": "Unknown"
+                                                         },
+                                                         "children": []
+                                                      },
+                                                      {
+                                                         "name": "Vir Ami Buster",
+                                                         "attributes": {
+                                                            "registrationNum": "PP24559601",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Male",
+                                                            "color": "Black",
+                                                            "birthday": "4/11/1990",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "Unknown",
+                                                            "parent2RegistrationNum": "Unknown"
+                                                         },
+                                                         "children": []
+                                                      }
+                                                   ]
+                                                }
+                                             ]
+                                          },
+                                          {
+                                             "name": "Landmark Carob's Delight",
+                                             "attributes": {
+                                                "registrationNum": "PP45058008",
+                                                "registrationType": "AKC",
+                                                "sex": "Male",
+                                                "color": "Brown",
+                                                "birthday": "4/18/1995",
+                                                "dnaInfo": "AKC DNA #V182978",
+                                                "chicNum": "14569",
+                                                "hips": "Good",
+                                                "ofaLink": "https://www.ofa.org/advanced-search?appnum=756608",
+                                                "parent1RegistrationNum": "PP25464401",
+                                                "parent2RegistrationNum": "PC105765"
+                                             },
+                                             "children": [
+                                                {
+                                                   "name": "Landmark Mayfair Nestle",
+                                                   "attributes": {
+                                                      "registrationNum": "PP25464401",
+                                                      "registrationType": "AKC",
+                                                      "sex": "Female",
+                                                      "color": "Chocolate",
+                                                      "birthday": "3/26/1990",
+                                                      "dnaInfo": "None",
+                                                      "chicNum": "None",
+                                                      "hips": "Good",
+                                                      "ofaLink": "https://www.ofa.org/advanced-search?appnum=413923",
+                                                      "parent1RegistrationNum": "Unknown",
+                                                      "parent2RegistrationNum": "Unknown"
+                                                   },
+                                                   "children": []
+                                                },
+                                                {
+                                                   "name": "Celest Bronze Knight",
+                                                   "attributes": {
+                                                      "registrationNum": "PC105765",
+                                                      "registrationType": "AKC",
+                                                      "sex": "Male",
+                                                      "color": "Chocolate",
+                                                      "birthday": "3/16/1987",
+                                                      "dnaInfo": "None",
+                                                      "chicNum": "None",
+                                                      "hips": "Good",
+                                                      "ofaLink": "https://www.ofa.org/advanced-search?appnum=364609",
+                                                      "parent1RegistrationNum": "PB706954",
+                                                      "parent2RegistrationNum": "PB506065"
+                                                   },
+                                                   "children": [
+                                                      {
+                                                         "name": "Celest Marron Glace",
+                                                         "attributes": {
+                                                            "registrationNum": "PB706954",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Female",
+                                                            "color": "Brown",
+                                                            "birthday": "2/10/1983",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Unknown",
+                                                            "ofaLink": "",
+                                                            "parent1RegistrationNum": "Unknown",
+                                                            "parent2RegistrationNum": "Unknown"
+                                                         },
+                                                         "children": []
+                                                      },
+                                                      {
+                                                         "name": "CH Valtec Carbonado",
+                                                         "attributes": {
+                                                            "registrationNum": "PB506065",
+                                                            "registrationType": "AKC",
+                                                            "sex": "Male",
+                                                            "color": "Black",
+                                                            "birthday": "2/18/1981",
+                                                            "dnaInfo": "None",
+                                                            "chicNum": "None",
+                                                            "hips": "Normal",
+                                                            "ofaLink": "https://www.ofa.org/advanced-search?appnum=153459",
+                                                            "parent1RegistrationNum": "PB098258",
+                                                            "parent2RegistrationNum": "PB295651"
+                                                         },
+                                                         "children": [
+                                                            {
+                                                               "name": "Funtyme Tourmaline Of Valtec",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB098258",
+                                                                  "registrationType": "AKC",
+                                                                  "sex": "Female",
+                                                                  "color": "Black",
+                                                                  "birthday": "1/15/1977 or 12/14/1976",
+                                                                  "dnaInfo": "None",
+                                                                  "chicNum": "None",
+                                                                  "hips": "Normal",
+                                                                  "ofaLink": "https://www.ofa.org/advanced-search?appnum=108926",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            },
+                                                            {
+                                                               "name": "CH Lemerle Le Charbonnier",
+                                                               "attributes": {
+                                                                  "registrationNum": "PB295651",
+                                                                  "registrationType": "AKC",
+                                                                  "sex": "Male",
+                                                                  "color": "Black",
+                                                                  "birthday": "5/2/1977",
+                                                                  "dnaInfo": "None",
+                                                                  "chicNum": "None",
+                                                                  "hips": "Normal",
+                                                                  "ofaLink": "https://www.ofa.org/advanced-search?appnum=111166",
+                                                                  "parent1RegistrationNum": "Unknown",
+                                                                  "parent2RegistrationNum": "Unknown"
+                                                               },
+                                                               "children": []
+                                                            }
+                                                         ]
+                                                      }
+                                                   ]
+                                                }
+                                             ]
+                                          }
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {
+                                 "name": "Forest Hills Lee's Red Ball",
+                                 "attributes": {
+                                    "registrationNum": "PR09389306",
+                                    "registrationType": "AKC",
+                                    "sex": "Male",
+                                    "color": "Red",
+                                    "birthday": "12/25/2006",
+                                    "dnaInfo": "AKC DNA #V524828",
+                                    "chicNum": "None",
+                                    "hips": "Unknown",
+                                    "ofaLink": "https://www.ofa.org/advanced-search?appnum=1310837",
+                                    "parent1RegistrationNum": "PR02244901",
+                                    "parent2RegistrationNum": "PR03335206"
+                                 },
+                                 "children": [
+                                    {
+                                       "name": "Leatherstocking's Strawberry",
+                                       "attributes": {
+                                          "registrationNum": "PR02244901",
+                                          "registrationType": "AKC",
+                                          "sex": "Female",
+                                          "color": "Apricot",
+                                          "birthday": "6/7/2003",
+                                          "dnaInfo": "None",
+                                          "chicNum": "None",
+                                          "hips": "Unknown",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "Unknown",
+                                          "parent2RegistrationNum": "Unknown"
+                                       },
+                                       "children": []
+                                    },
+                                    {
+                                       "name": "Leatherstocking Coppercoopper",
+                                       "attributes": {
+                                          "registrationNum": "PR03335206",
+                                          "registrationType": "AKC",
+                                          "sex": "Male",
+                                          "color": "Red",
+                                          "birthday": "11/8/2003",
+                                          "dnaInfo": "AKC DNA #V409962",
+                                          "chicNum": "None",
+                                          "hips": "Unknown",
+                                          "ofaLink": "",
+                                          "parent1RegistrationNum": "Unknown",
+                                          "parent2RegistrationNum": "Unknown"
+                                       },
+                                       "children": []
+                                    }
+                                 ]
+                              }
+                           ]
+                        },
+                        {
+                           "name": "Billingsley's Sam I Am",
+                           "attributes": {
+                              "registrationNum": "PR14323903",
+                              "registrationType": "AKC",
+                              "sex": "Male",
+                              "color": "Red",
+                              "birthday": "5/21/2010",
+                              "dnaInfo": "None",
+                              "chicNum": "None",
+                              "hips": "Unknown",
+                              "ofaLink": "",
+                              "parent1RegistrationNum": "Unknown",
+                              "parent2RegistrationNum": "Unknown"
+                           },
+                           "children": []
+                        }
+                     ]
+                  }
+               ]
+            }
+         ]
+      }
+   ]
+}

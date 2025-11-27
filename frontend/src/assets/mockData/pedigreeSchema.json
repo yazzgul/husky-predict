@@ -1,0 +1,16 @@
+{
+    "attributes": {
+      "registrationNum": "Registration #",
+      "registrationType": "Registration Type",
+      "sex": "Sex",
+      "color": "Color",
+      "birthday": "Birthday",
+      "dnaInfo": "DNA Info",
+      "chicNum": "CHIC #",
+      "hips": "Hips",
+      "ofaLink": "OFA Link",
+      "offspringRegistrationNum": "Child Reg #"
+    },
+    "children": [{"who?":"entries that follow this schema whose offspringRegistrationNum is equal to this entries' registrationNum"}],
+    "name":"Registered Name"
+}
