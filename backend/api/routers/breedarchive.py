@@ -10,6 +10,7 @@ from models.dog import Dog
 from core.parsersConfig import BREEDARCHIVE_API, BREEDARCHIVE_DOG_PATH, HEADERS
 from core.database import session_scope
 from parsers.breedarchive import parse_data_from_page_scripts, process_animal_by_uuid, process_animal_with_new_session, parse_breedarchive_browse_page
+from parsers.breedarchive import search_breedarchive_by_name, create_breedarchive_client
 
 logger = logging.getLogger(__name__)
 
@@ -122,16 +123,16 @@ async def fetch_breedarchive_dog(uuid: str, with_update: bool = True, maxDeep: i
                     )
                 )
                 dog = result.scalars().first()
-                
+
                 if dog:
                     return dog
-                
+
         logger.info(f"maxDeep param: {maxDeep}")
         dog = await process_animal_by_uuid(uuid, maxDeep)
-                
+
         if not dog:
             raise HTTPException(status_code=404, detail="Dog not found in breedarchive.com database")
-            
+
         return dog
 
     except Exception as e:
@@ -145,3 +146,30 @@ async def parse_breedarchive_dog(dogPath: str):
     if not parsed_data:
         raise HTTPException(status_code=404, detail="Can't parse it")
     return parsed_data
+
+
+@router.get("/search/dog/{dog_name}")
+async def search_breedarchive_by_name_route(dog_name: str):
+    """
+    Поиск собаки в BreedArchive по имени
+
+    Arg:
+        dog_name: Имя собаки для поиска
+    """
+    try:
+        logger.info(f"Searching BreedArchive for: {dog_name}")
+
+        # Поиск UUID
+        uuid = await search_breedarchive_by_name(dog_name)
+
+        result = {
+            "dog_name": dog_name,
+            "found": uuid is not None,
+            "breedarchive_uuid": uuid,
+            "message": f"Dog {'found' if uuid else 'not found'} in BreedArchive"
+        }
+        return result
+
+    except Exception as e:
+        logger.error(f"Error searching BreedArchive: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

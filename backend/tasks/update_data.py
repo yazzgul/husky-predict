@@ -1,6 +1,6 @@
 import asyncio
 from httpx import AsyncClient
-from parsers import breedarchive, breedbase, huskypedigre
+from parsers import breedarchive, breedbase, huskypedigree
 from core.database import get_async_session
 from utils.cache import cache
 from .celery import celery_app
@@ -8,6 +8,7 @@ import requests
 import logging
 from celery.schedules import crontab
 from opentelemetry import trace
+# from parsers.zooportal import process_zooportal_page
 
 API_URL = "http://localhost:8000"
 
@@ -18,7 +19,8 @@ async def update_all_sources():
         await asyncio.gather(
             update_breedarchive(session),
             update_breedbase(session),
-            update_huskypedigre(session)
+            update_huskypedigre(session),
+            # update_zooportal(session)
         )
     await cache.clear_pattern("dogs:*")
 
@@ -30,6 +32,18 @@ async def update_breedbase(session):
 
 async def update_huskypedigre(session):
     data = await huskypedigre.fetch_huskypedigre_data(session)
+
+# async def update_zooportal(session):
+#     """Обновление данных с Zooportal"""
+#     try:
+#         # Обрабатываем первые 5 страниц
+#         for page_num in range(1, 6):
+#             await process_zooportal_page(page_num, max_dogs=11, max_depth=3)
+#             await asyncio.sleep(5)  # Задержка между страницами
+#     except Exception as e:
+#         print("Error updating from Zooportal: {e}")
+#         # Добавить логгер
+#         # logger.error(f"Error updating from Zooportal: {e}")
 
 @celery_app.task
 def parse_breedarchive_recent_dogs():

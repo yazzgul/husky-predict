@@ -18,6 +18,24 @@ class Settings(BaseSettings):
     REDIS_URL: RedisDsn
     
     BREEDARCHIVE_USER: str
+
+    # BreedArchive авторизация
+    BREEDARCHIVE_EOIID: Optional[str] = None
+    BREEDARCHIVE_GADSID: Optional[str] = None
+    BREEDARCHIVE_GPUID: Optional[str] = None
+    BREEDARCHIVE_GA: Optional[str] = None
+    BREEDARCHIVE_GID: Optional[str] = None
+    BREEDARCHIVE_SESSION_TBA_V3: Optional[str] = None
+    BREEDARCHIVE_COOKIE_SETTINGS: Optional[str] = None
+
+    # ZOOPORTAL
+    ZOOPORTAL_PHPSESSID: Optional[str] = None
+    ZOOPORTAL_LOGIN: Optional[str] = None
+    ZOOPORTAL_SALE_UID: Optional[str] = None
+
+    ZOOPORTAL_BITRIX_SM_UIDH: Optional[str] = None
+    ZOOPORTAL_BITRIX_SM_UIDL: Optional[str] = None
+    ZOOPORTAL_BITRIX_SM_GUEST_ID: Optional[str] = None
     
     class Config:
         case_sensitive = True

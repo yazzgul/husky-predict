@@ -10,6 +10,11 @@ class Breeder(SQLModel, table=True):
     uuid: Optional[str] = Field(unique=True, index=True)
     name: str
     is_breeder: bool
+
+    # НОВЫЕ ПОЛЯ для питомника заводчика
+    kennel: Optional[str] = Field(default=None, nullable=True)  # Питомник заводчика
+    breeder_url: Optional[str] = Field(default=None, nullable=True)  # Ссылка на профиль заводчика
+    kennel_url: Optional[str] = Field(default=None, nullable=True)  # Ссылка на питомник заводчика
     
     dogs: List["Dog"] = Relationship(
         back_populates="breeders",
@@ -41,6 +46,11 @@ class Owner(SQLModel, table=True):
     uuid: Optional[str] = Field(unique=True, index=True)
     name: str
     is_main_owner: bool
+
+    # НОВЫЕ ПОЛЯ для питомника владельца
+    kennel: Optional[str] = Field(default=None, nullable=True)  # Питомник владельца
+    owner_url: Optional[str] = Field(default=None, nullable=True)  # Ссылка на профиль владельца
+    kennel_url: Optional[str] = Field(default=None, nullable=True)  # Ссылка на питомник владельца
     
     dogs: List["Dog"] = Relationship(
         back_populates="owners",
@@ -72,6 +82,10 @@ class BreederRead(SQLModel):
     name: str
     is_breeder: bool = True
 
+    kennel: Optional[str] = None
+    breeder_url: Optional[str] = None
+    kennel_url: Optional[str] = None
+
     class Config:
         from_attributes = True
 
@@ -80,6 +94,10 @@ class OwnerRead(SQLModel):
     uuid: str
     name: str
     is_main_owner: bool = True
+
+    kennel: Optional[str] = None
+    owner_url: Optional[str] = None
+    kennel_url: Optional[str] = None
 
     class Config:
         from_attributes = True

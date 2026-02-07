@@ -46,6 +46,19 @@ class DogService:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    # async def find_dog_by_zooportal_id(self,
+    #         zooportal_id: str,
+    #         session: Optional[AsyncSession] = None
+    # ) -> Dog | None:
+    #
+    #     if session is None:
+    #         session = self.session
+    #
+    #     result = await session.execute(
+    #         select(Dog).where(Dog.zooportal_id == str(zooportal_id))
+    #     )
+    #     return result.scalars().first()
+
     async def get_dog_by_id(self, dog_id: int) -> Dog:
         result = await self.session.execute(
             select(Dog)

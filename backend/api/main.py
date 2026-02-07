@@ -161,6 +161,8 @@ from api.routers import dogs_router, breedbase_router, breedarchive_router, husk
 
 import logging
 from logging.handlers import RotatingFileHandler
+from api.routers.zooportal import router as zooportal_router
+
 
 # OpenTelemetry - ОНО ТОРМОЗИТ (?)
 # from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -233,7 +235,8 @@ app.include_router(breedarchive_router, prefix="/api/v1/breedarchive", tags=["br
 app.include_router(breedbase_router, prefix="/api/v1/breedbase", tags=["breedbase"])
 app.include_router(huskypedigree_router, prefix="/api/v1/huskypedigree", tags=["huskypedigree"])
 app.include_router(ofa_router, prefix="/api/v1/ofa")
-
+# Новый роутер для Zooportal
+app.include_router(zooportal_router, prefix="/api/v1/zooportal", tags=["zooportal"])
 # instrumentation - ОНО ТОРМОЗИТ (?)
 # FastAPIInstrumentor.instrument_app(app)
 # RequestsInstrumentor().instrument()

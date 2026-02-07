@@ -6,6 +6,7 @@ class TitleBase(SQLModel):
     short_name: str
     long_name: Optional[str]
     is_prefix: bool
+    country: Optional[str] = Field(default=None, nullable=True)
     has_winner_year: Optional[bool] = False
     winner_year: Optional[int]
 
@@ -33,6 +34,7 @@ class TitleRead(SQLModel):
     short_name: str
     long_name: Optional[str]
     is_prefix: bool
+    country: Optional[str] = None
     has_winner_year: Optional[bool] = False
     winner_year: Optional[int]
 

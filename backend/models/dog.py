@@ -24,6 +24,19 @@ if TYPE_CHECKING:
 class DogBase(SQLModel):
     # Identifiers & Names
     uuid: str = Field(unique=True, index=True)
+    zooportal_id: Optional[str] = Field(
+        default=None,
+        nullable=True,
+        index=True,
+        description="ID собаки на Zooportal"
+    )
+    zoo_hash: Optional[str] = Field(
+        default=None,
+        nullable=True,
+        index=True,
+        max_length=64,
+        description="Уникальный хэш для идентификации между системами"
+    )
     registered_name: Optional[str]
     call_name: Optional[str]
     link_name: Optional[str]
@@ -176,6 +189,7 @@ class Dog(DogBase, table=True):
     __table_args__ = (
         Index('ix_dog_dam_id', 'dam_id'),
         Index('ix_dog_sire_id', 'sire_id'),
+        Index('ix_dog_zooportal_id', 'zooportal_id'),
         # Явное имя для внешнего ключа birth_litter_id
         ForeignKeyConstraint(
             ["birth_litter_id"], ["litter.id"],
@@ -376,6 +390,7 @@ class DogCreate(DogBase):
 
 class DogRead(DogBase):
     id: int
+    zooportal_id: Optional[str]
     dam_id: Optional[int]
     dam_uuid: Optional[str]
     dam_name: Optional[str]

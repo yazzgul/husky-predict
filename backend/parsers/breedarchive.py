@@ -9,7 +9,7 @@ import re
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from typing import Optional, List, Set, Dict, Any
+from typing import Optional, List, Set, Dict, Any, Union
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 
@@ -21,9 +21,17 @@ import tracemalloc
 from core.database import session_scope
 from core.config import settings
 from core.parsersConfig import BREEDARCHIVE_API, BREEDARCHIVE_DOG_PATH, DELAY_RANGE, HEADERS, MAX_RETRIES
-from utils.parser_utils import  get_photo_url, parse_coi, parse_datetime, parse_float, parse_int, parse_date
+from utils.parser_utils import get_photo_url, parse_coi, parse_datetime, parse_float, parse_int, parse_date, \
+    normalize_name_case, remove_titles
 from models import Dog, Breeder, Owner, Title, Litter, DogBreederLink, DogOwnerLink, DogSiblingLink
 from utils.dog_matcher import find_existing_dog, detect_conflicts, merge_dog_data
+
+import httpx
+import logging
+from typing import Optional, Dict, Any
+from core.parsersConfig import BREEDARCHIVE_API, HEADERS
+from utils.parser_utils import transliterate_russian_to_english, transliterate_english_to_russian
+from datetime import datetime, date
 
 tracemalloc.start()
 logger = logging.getLogger(__name__)
@@ -35,6 +43,31 @@ logger = logging.getLogger(__name__)
 # Для Windows требуется установка event loop policy
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+
+from core.parsersConfig import (
+    BREEDARCHIVE_API,
+    BREEDARCHIVE_SEARCH_URL,
+    BREEDARCHIVE_COOKIES,
+    HEADERS
+)
+from utils.parser_utils import transliterate_russian_to_english, transliterate_english_to_russian
+
+logger = logging.getLogger(__name__)
+
+
+def create_breedarchive_client() -> httpx.AsyncClient:
+    """Создает HTTP клиент с куками для BreedArchive"""
+    # Фильтруем пустые куки
+    cookies = {k: v for k, v in BREEDARCHIVE_COOKIES.items() if v}
+
+    logger.debug(f"Creating BreedArchive client with {len(cookies)} cookies")
+
+    return httpx.AsyncClient(
+        headers=HEADERS,
+        cookies=cookies,
+        timeout=30.0,
+        follow_redirects=True
+    )
 
                 
 async def get_dog_by_uuid(uuid: str, session: AsyncSession) -> Optional[Dog]:
@@ -817,6 +850,7 @@ def parse_dog_data(raw: Dict[str, Any], dam: Dog, sire: Dog, source: str = "bree
         "sire_id":  sire.id if sire else None,
     }
 
+    cleaned_data = {k: v for k, v in base_data.items() if v is not None}
     dog = Dog(**base_data)
     # logger.info(f"Dog to create: {dog}")
 
@@ -1166,4 +1200,242 @@ async def extract_dog_data_from_element(page, dog_element) -> Optional[Dict[str,
         
     except Exception as e:
         logger.error(f"Error extracting dog data from element: {str(e)}")
+        return None
+
+# Добавить в parsers/breedarchive.py
+
+async def fetch_breedarchive_basic_info(uuid: str) -> Optional[Dict]:
+    """
+    Запрашивает только основные данные собаки из BreedArchive (без предков).
+    Возвращает данные в формате, готовом для создания Dog.
+    """
+    try:
+        url = f"{BREEDARCHIVE_API}/animal/get_animal/{uuid}?include_ancestors=false&generations=1"
+
+        async with create_breedarchive_client() as client:
+            response = await client.get(url, headers=HEADERS)
+            response.raise_for_status()
+            data = response.json()
+
+            animal_data = data.get('animal', {})
+            if not animal_data:
+                logger.warning(f"No animal data for UUID {uuid}")
+                return None
+
+            # Просто возвращаем сырые данные - преобразование будет в parse_dog_basic_data
+            processed_data = {
+                'uuid': uuid,
+                'registered_name': animal_data.get('registered_name'),
+                'link_name': animal_data.get('link_name'),
+                'color': animal_data.get('color'),
+                'year_of_birth': animal_data.get('year_of_birth'),
+                'month_of_birth': animal_data.get('month_of_birth'),
+                'day_of_birth': animal_data.get('day_of_birth'),
+                'land_of_birth': animal_data.get('land_of_birth'),
+                'land_of_birth_code': animal_data.get('land_of_birth_code'),
+                'prefix_titles': animal_data.get('prefix_titles'),
+                'suffix_titles': animal_data.get('suffix_titles'),
+                'variety': animal_data.get('variety'),
+                'registration_status': animal_data.get('registration_status'),
+                'coi': animal_data.get('coi'),
+                'incomplete_pedigree': animal_data.get('incomplete_pedigree'),
+                'primary_photo_path': animal_data.get('primary_photo_path'),
+                # Этих полей нет в ответе get_animal
+                'sex': None,
+                'call_name': None,
+                'sire_uuid': None,
+                'dam_uuid': None,
+                'registration_number': None,
+                'brand_chip': None,
+                'source': 'breedarchive.com'
+            }
+            return processed_data
+
+    except httpx.HTTPStatusError as e:
+        logger.warning(f"HTTP error fetching basic info for {uuid}: {e.response.status_code}")
+        return None
+    except Exception as e:
+        logger.error(f"Error fetching basic BreedArchive data for UUID {uuid}: {e}")
+        return None
+
+
+def normalize_breedarchive_basic(basic_breedarchive_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Приводит basic_breedarchive_data (в т.ч. если внутри лежит breedarchive_data с camelCase)
+    к формату snake_case, который ожидает parse_dog_basic_data().
+    """
+    raw = basic_breedarchive_data.get("breedarchive_data") or basic_breedarchive_data
+
+
+    def g(*keys, default=None):
+        for k in keys:
+            if k in raw and raw[k] not in (None, ""):
+                return raw[k]
+        return default
+
+    # Обрабатываем фото (приводим к полному адресу для дальнейшей работы)
+    photo_path = g("primaryPhotoPath", "primary_photo_path", default=None)
+    photo_url = None
+    if photo_path:
+        photo_url = get_photo_url({"primary_photo_path": photo_path})
+
+    normalized: Dict[str, Any] = {
+        "uuid": g("uuid", default=""),
+        "registered_name": g("registeredName", "registered_name", default=""),
+        "link_name": g("linkName", "link_name", default=""),
+        "sex": g("sex", default=0),
+
+        "color": g("color", default=""),
+        "color_marking": g("colorMarking", "color_marking", default=""),
+        "variety": g("variety", default=""),
+
+        "call_name": g("callName", "call_name", default=""),
+        "registration_number": g("registrationNumber", "registration_number", default=""),
+        "registration_status": g("registrationStatus", "registration_status", default=None),
+
+        "land_of_birth": g("landOfBirth", "land_of_birth", default=""),
+        "land_of_standing": g("landOfStanding", "land_of_standing", default=""),
+
+        "prefix_titles": g("prefixTitles", "prefix_titles", default=""),
+        "suffix_titles": g("suffixTitles", "suffix_titles", default=""),
+
+        # "primary_photo_path": g("primaryPhotoPath", "primary_photo_path", default=None),
+        "primary_photo_path": photo_path,
+        "photo_url": photo_url,
+        # "photo_url" = get_photo_url({'primary_photo_path': raw['primary_photo_path']}),
+
+        # Если есть только год (как в примере), кладём year_of_birth.
+        "year_of_birth": g("yearOfBirth", "year_of_birth", default=None),
+
+        # Родителей в basic достаточно как имена (uuid/link могут появляться в полном профиле)
+        "sire_name": g("sireName", "sire_name", default=""),
+        "dam_name": g("damName", "dam_name", default=""),
+        "sire_uuid": g("sireUuid", "sire_uuid", default=""),
+        "dam_uuid": g("damUuid", "dam_uuid", default=""),
+        "sire_link_name": g("sireLinkName", "sire_link_name", default=""),
+        "dam_link_name": g("damLinkName", "dam_link_name", default=""),
+
+        "locked": g("locked", default=None),
+        "neutered": g("neutered", default=False),
+        "show_ad": g("showAd", "show_ad", default=None),
+
+        "artificial_insemination": g("artificialInsemination", "artificial_insemination", default=False),
+        "frozen_semen": g("frozenSemen", "frozen_semen", default=False),
+    }
+
+    # подчистим явные None
+    return {k: v for k, v in normalized.items() if v is not None}
+
+async def search_breedarchive_by_name(registered_name: str, return_basic_info: bool = False) -> Optional[
+    Union[str, Dict]]:
+    """
+    Ищет собаку в BreedArchive по имени.
+
+    Args:
+        registered_name: Имя собаки для поиска
+        return_basic_info: Если True, возвращает словарь с UUID и основной информацией,
+                          если False - только UUID
+
+    Returns:
+        UUID или словарь с данными, или None если не найдена
+    """
+    try:
+        if not registered_name or not isinstance(registered_name, str):
+            logger.error(f"Invalid search name: {registered_name}")
+            return None
+
+        # Очищаем имя
+        # clean_name = registered_name.strip()
+        clean_name = normalize_name_case(registered_name.strip())
+        if not clean_name:
+            return None
+
+        logger.info(f" Searching BreedArchive for: '{clean_name}'")
+
+        # Варианты для поиска
+        search_variants = []
+
+        # 1. Нормализованное имя и без титулов
+        base_name = normalize_name_case(registered_name.strip())
+        name_without_titles = remove_titles(base_name)
+        search_variants.append(name_without_titles)
+
+        # 2. Транслитерация RU → EN
+        if any('а' <= c.lower() <= 'я' for c in base_name):
+            translit_en = transliterate_russian_to_english(name_without_titles or base_name)
+            if translit_en:
+                search_variants.append(normalize_name_case(translit_en))
+
+        # 3. Транслитерация EN → RU
+        if any('a' <= c.lower() <= 'z' for c in base_name):
+            translit_ru = transliterate_english_to_russian(name_without_titles or base_name)
+            if translit_ru:
+                search_variants.append(normalize_name_case(translit_ru))
+
+        # Убираем дубликаты
+        search_variants = list(set([v for v in search_variants if v]))
+
+        # logger.info(f"-------------------------Search variants for '{clean_name}': {search_variants}")
+
+        # Используем клиент с куками
+        async with create_breedarchive_client() as client:
+            for search_variant in search_variants:
+                try:
+                    params = {
+                        'registered_name': search_variant.strip(),
+                        'start': 0,
+                        'order_column': 'registeredName',
+                        'order_asc': True
+                    }
+
+                    response = await client.get(
+                        BREEDARCHIVE_SEARCH_URL,
+                        params=params
+                    )
+
+                    if response.status_code == 200:
+                        data = response.json()
+
+                        if data.get('records') and len(data['records']) > 0:
+                            record = data['records'][0]
+                            uuid = record.get('uuid')
+
+                            if uuid:
+                                if return_basic_info:
+                                    # Возвращаем и UUID, и основную информацию
+                                    basic_info = {
+                                        'uuid': uuid,
+                                        'registered_name': record.get('registeredName', record.get('registered_name', 'Unknown')),
+                                        'breedarchive_data': record
+                                    }
+                                    # logger.info(f"---------------------------- BASIC_INFO BREEDRACHIVE: {basic_info}")
+                                    return basic_info
+                                else:
+                                    return uuid
+
+                            logger.debug(f"Found record but no UUID: {record}")
+                    elif response.status_code == 401:
+                        logger.error(f"Unauthorized (401) - Check BreedArchive cookies")
+                        logger.debug(f"Response headers: {response.headers}")
+                        logger.debug(f"Response text: {response.text[:200]}")
+                        # Если получили 401, скорее всего куки устарели
+                        break
+                    else:
+                        logger.warning(
+                            f"BreedArchive API returned status {response.status_code} for '{search_variant}'")
+
+                except httpx.RequestError as e:
+                    logger.warning(f"Request error searching for '{search_variant}': {str(e)}")
+                    await asyncio.sleep(1)
+                    continue
+                except Exception as e:
+                    logger.warning(f"Error searching for '{search_variant}': {str(e)}")
+                    await asyncio.sleep(1)
+                    continue
+
+        logger.info(f"No dog found in BreedArchive for: '{clean_name}'")
+        return None
+
+    except Exception as e:
+        logger.error(f"Error in search_breedarchive_by_name for '{registered_name}': {str(e)}")
         return None
