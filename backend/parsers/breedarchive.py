@@ -32,7 +32,7 @@ from typing import Optional, Dict, Any
 from core.parsersConfig import BREEDARCHIVE_API, HEADERS
 from utils.parser_utils import transliterate_russian_to_english, transliterate_english_to_russian
 from datetime import datetime, date
-
+from utils.memory_cache import cached
 tracemalloc.start()
 logger = logging.getLogger(__name__)
 
@@ -1204,6 +1204,8 @@ async def extract_dog_data_from_element(page, dog_element) -> Optional[Dict[str,
 
 # Добавить в parsers/breedarchive.py
 
+
+@cached(ttl=7200)
 async def fetch_breedarchive_basic_info(uuid: str) -> Optional[Dict]:
     """
     Запрашивает только основные данные собаки из BreedArchive (без предков).
@@ -1326,6 +1328,7 @@ def normalize_breedarchive_basic(basic_breedarchive_data: Dict[str, Any]) -> Dic
     # подчистим явные None
     return {k: v for k, v in normalized.items() if v is not None}
 
+@cached(ttl=7200)  # Кэшируем на 2 часа
 async def search_breedarchive_by_name(registered_name: str, return_basic_info: bool = False) -> Optional[
     Union[str, Dict]]:
     """
@@ -1375,8 +1378,6 @@ async def search_breedarchive_by_name(registered_name: str, return_basic_info: b
         # Убираем дубликаты
         search_variants = list(set([v for v in search_variants if v]))
 
-        # logger.info(f"-------------------------Search variants for '{clean_name}': {search_variants}")
-
         # Используем клиент с куками
         async with create_breedarchive_client() as client:
             for search_variant in search_variants:
@@ -1408,7 +1409,7 @@ async def search_breedarchive_by_name(registered_name: str, return_basic_info: b
                                         'registered_name': record.get('registeredName', record.get('registered_name', 'Unknown')),
                                         'breedarchive_data': record
                                     }
-                                    # logger.info(f"---------------------------- BASIC_INFO BREEDRACHIVE: {basic_info}")
+
                                     return basic_info
                                 else:
                                     return uuid

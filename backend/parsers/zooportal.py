@@ -1,17 +1,229 @@
-import asyncio
 import re
-import hashlib
 import logging
+from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple, Any
 from bs4 import BeautifulSoup
 
 from playwright.async_api import async_playwright
 from core.parsersConfig import ZOOPORTAL_BASE_URL, ZOOPORTAL_DOG_PATH, ZOOPORTAL_COOKIES
-from utils.parser_utils import parse_date, transliterate_russian_to_english, parse_titles_from_html
+from utils.parser_utils import parse_date, parse_titles_from_html
+from utils.memory_cache import cached, get_dog_data_from_cache, save_dog_data_to_cache
+import asyncio
 
 logger = logging.getLogger(__name__)
 
 MAIN_ZOOPORTAL_URL = "https://zooportal.pro"
+
+
+# Глобальные переменные для управления браузером
+_browser_instance = None
+_browser_lock = asyncio.Lock()
+_browser_created_at = None
+_MAX_BROWSER_AGE_MINUTES = 60  # Браузер умрет через 60 минут
+_cleanup_task = None  # Фоновая задача для очистки
+
+
+async def _create_new_browser():
+    """Создать новый экземпляр браузера"""
+    global _browser_instance, _browser_created_at, _browser_pages_count
+
+    playwright = await async_playwright().start()
+    browser = await playwright.chromium.launch(
+        headless=True,
+        args=[
+            "--disable-dev-shm-usage",
+            "--no-sandbox",
+            "--disable-gpu",
+            "--disable-blink-features=AutomationControlled"
+        ]
+    )
+
+    context = await browser.new_context(
+        viewport={"width": 1920, "height": 1080},
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    )
+
+    cookies = prepare_zooportal_cookies()
+    if cookies:
+        await context.add_cookies(cookies)
+
+    _browser_instance = (playwright, browser, context)
+    _browser_created_at = datetime.now()
+    _browser_pages_count = 0
+
+    logger.info(f"Создан новый браузер (будет удален через {_MAX_BROWSER_AGE_MINUTES} минут)")
+
+    # Запускаем фоновую задачу для очистки
+    _start_background_cleanup()
+
+    return _browser_instance
+
+
+async def _cleanup_old_browser():
+    """Удалить старый браузер, если он существует и устарел"""
+    global _browser_instance, _browser_created_at
+
+    async with _browser_lock:
+        if _browser_instance is None:
+            return
+
+        if _browser_created_at is None:
+            return
+
+        now = datetime.now()
+        browser_age = now - _browser_created_at
+
+        if browser_age > timedelta(minutes=_MAX_BROWSER_AGE_MINUTES):
+            minutes = browser_age.total_seconds() / 60
+            logger.info(f"Браузер устарел ({minutes:.1f} мин), удаляем...")
+            await _force_cleanup_browser()
+
+
+async def _force_cleanup_browser():
+    """Принудительно закрыть браузер"""
+    global _browser_instance, _browser_created_at, _browser_pages_count
+
+    if _browser_instance:
+        try:
+            playwright, browser, context = _browser_instance
+            await context.close()
+            await browser.close()
+            await playwright.stop()
+            logger.info("Браузер успешно закрыт")
+        except Exception as e:
+            logger.error(f"Ошибка при закрытии браузера: {e}")
+        finally:
+            _browser_instance = None
+            _browser_created_at = None
+            _browser_pages_count = 0
+
+
+def _start_background_cleanup():
+    """Запустить фоновую задачу для периодической проверки и очистки"""
+    global _cleanup_task
+
+    async def cleanup_checker():
+        """Фоновая задача проверки устаревания браузера"""
+        while True:
+            try:
+                await asyncio.sleep(60)  # Проверяем каждую минуту
+                await _cleanup_old_browser()
+
+                # Если браузер удален, выходим из цикла
+                if _browser_instance is None:
+                    break
+
+            except Exception as e:
+                logger.error(f"Ошибка в фоновой задаче очистки: {e}")
+                await asyncio.sleep(60)
+
+    # Запускаем только если нет активной задачи
+    if _cleanup_task is None or _cleanup_task.done():
+        _cleanup_task = asyncio.create_task(cleanup_checker())
+
+
+async def get_browser():
+    """Получить браузер: создает новый или возвращает существующий"""
+    global _browser_instance, _browser_created_at
+
+    async with _browser_lock:
+        # Если браузер не существует или отключен
+        if _browser_instance is None:
+            return await _create_new_browser()
+
+        # Проверяем соединение с браузером
+        playwright, browser, context = _browser_instance
+        try:
+            if not browser.is_connected():
+                logger.warning("Браузер отключен, создаем новый")
+                await _force_cleanup_browser()
+                return await _create_new_browser()
+        except:
+            logger.warning("Ошибка проверки соединения браузера, создаем новый")
+            await _force_cleanup_browser()
+            return await _create_new_browser()
+
+        # Проверяем, не устарел ли браузер
+        now = datetime.now()
+        if _browser_created_at:
+            browser_age = now - _browser_created_at
+            if browser_age > timedelta(minutes=_MAX_BROWSER_AGE_MINUTES):
+                minutes = browser_age.total_seconds() / 60
+                logger.info(f"Браузер устарел ({minutes:.1f} мин), пересоздаем")
+                await _force_cleanup_browser()
+                return await _create_new_browser()
+
+        return _browser_instance
+
+
+async def shutdown_browser():
+    """Корректное завершение работы браузера"""
+    global _cleanup_task
+
+    # Останавливаем фоновую задачу
+    if _cleanup_task and not _cleanup_task.done():
+        _cleanup_task.cancel()
+        try:
+            await _cleanup_task
+        except asyncio.CancelledError:
+            pass
+
+    # Закрываем браузер
+    await _force_cleanup_browser()
+    logger.info("Браузер завершен")
+
+
+async def safe_fetch_page(url: str, max_retries: int = 3) -> str:
+    """Безопасная загрузка страницы с восстановлением браузера при ошибках"""
+    for attempt in range(max_retries):
+        try:
+            playwright, browser, context = await get_browser()
+            page = None
+
+            try:
+                page = await context.new_page()
+                logger.info(f"Загрузка [{attempt + 1}/{max_retries}]: {url}")
+
+                # Используем networkidle для надежности
+                await page.goto(url, wait_until='networkidle', timeout=60000)
+
+                # ДОБАВЬТЕ ЭТО: ожидание стабильности DOM
+                await page.wait_for_function(
+                    'document.readyState === "complete"',
+                    timeout=10000
+                )
+
+                # Дополнительная пауза для JavaScript
+                await asyncio.sleep(3)
+
+                # Безопасное получение контента с обработкой ошибок
+                try:
+                    content = await page.content()
+                except Exception as content_error:
+                    logger.warning(f"Первая попытка content() не удалась: {content_error}")
+                    await asyncio.sleep(2)
+                    content = await page.content()
+
+                return content
+
+            finally:
+                if page:
+                    try:
+                        await page.close()
+                    except:
+                        pass
+
+        except Exception as e:
+            logger.error(f"Ошибка при загрузке {url} (попытка {attempt + 1}): {e}")
+
+            if attempt == max_retries - 1:
+                raise
+
+            # Ждем перед следующей попыткой
+            await asyncio.sleep(3)
+
+    raise Exception(f"Не удалось загрузить страницу после {max_retries} попыток")
+
 def prepare_zooportal_cookies():
     """Преобразует куки в формат для Playwright"""
     cookies_list = []
@@ -24,7 +236,6 @@ def prepare_zooportal_cookies():
                 'path': '/'
             })
     return cookies_list
-
 
 async def create_zooportal_browser_context():
     """Создает браузерный контекст с куками"""
@@ -49,43 +260,10 @@ async def create_zooportal_browser_context():
 
     return playwright, browser, context
 
-
-# async def fetch_zooportal_page(url: str) -> str:
-#     """Загружает страницу с использованием Playwright"""
-#     playwright, browser, context = await create_zooportal_browser_context()
-#
-#     try:
-#         page = await context.new_page()
-#         await page.goto(url, wait_until='networkidle', timeout=90000)
-#         await asyncio.sleep(10)
-#
-#         html = await page.content()
-#         return html
-#     finally:
-#         await browser.close()
-#         await playwright.stop()
+@cached(ttl=7200)
 async def fetch_zooportal_page(url: str) -> str:
-    playwright, browser, context = await create_zooportal_browser_context()
-
-    try:
-        page = await context.new_page()
-
-        logger.info(f"Загрузка: {url}")
-        await page.goto(url, wait_until='networkidle', timeout=90000)
-
-        await asyncio.sleep(5)
-
-        html = await page.content()
-
-        # Проверка
-        if "pedigree/view" not in html:
-            logger.info(f"Нет данных. Повторная попытка загрузки: {url}")
-            await asyncio.sleep(5)
-            html = await page.content()
-        return html
-    finally:
-        await browser.close()
-        await playwright.stop()
+    """Загружает страницу с использованием Playwright и кэширования"""
+    return await safe_fetch_page(url)
 
 def parse_zooportal_search_results(html: str) -> List[Dict]:
     """Парсит результаты страницы поиска собак"""
@@ -122,18 +300,13 @@ def parse_zooportal_search_results(html: str) -> List[Dict]:
             elif 'blue' in item_classes:
                 sex = 1  # кобель
 
-            # uuid_str = f"zooportal_{dog_id}"
-            # uuid = hashlib.md5(uuid_str.encode()).hexdigest()
-
             dogs.append({
                 'dog_id': dog_id,
                 'registered_name': name,
                 'sex': sex,
-                # 'uuid': uuid,
                 'url': f"{ZOOPORTAL_BASE_URL}{href}",
                 'source': 'zooportal.pro'
             })
-            # logger.info(f"------------------------ DOGS: {dogs}")
 
 
         except Exception as e:
@@ -142,16 +315,14 @@ def parse_zooportal_search_results(html: str) -> List[Dict]:
 
     return dogs
 
-
+@cached(ttl=7200)
 async def parse_zooportal_search_page(page_num: int = 1) -> List[Dict]:
-    """Парсит страницу поиска собак"""
-    base_url = "https://zooportal.pro/pedigree/?bxajaxid=&AJAX_CALL=N&APPLY=Y&RESET=N&RAND=0.4655610706446941&FILTER_NAME=arrFilter&KENNEL_ID=&SHORT=&OWNER=&F%5BNAME%5D=&F%5BNICKNAME%5D=&F%5BDOCUMENT%5D=0&F%5BDOCUMENT_NUMBER%5D=&F%5BSTAMP%5D=&F%5BTHEME%5D=1209&F%5BSEX%5D=0&F%5BBREED%5D=16747920&F%5BBREED_PARAMETER1%5D=0&F%5BBREED_PARAMETER2%5D=0&F%5BBREED_PARAMETER3%5D=0&F%5BCOUNTRY%5D=0&F%5BREGION%5D=0&F%5BRAION%5D=0&F%5BCITY%5D=0&F%5BPUNKT%5D=0"
+    """Парсит страницу поиска собак с кэшированием"""
+    base_url = "https://zooportal.pro/pedigree/?bxajaxid=&AJAX_CALL=N&APPLY=Y&RESET=N&RAND=0.4655610706446941&FILTER_NAME=arrFilter&KENNEL_ID=&SHORT=&OWNER=&F%5BNAME%5D=&F%5BNICKNAME%5D=&F%5BDOCUMENT%5D=0&F%5BDOCUMENT_NUMBER%5D=&F%5BSTAMP%5D=&F%5BTHEME%5D=1209&F%5BSEX%5D=0&F%5BBREED%5D=16747920&F%5BBBREED_PARAMETER1%5D=0&F%5BBBREED_PARAMETER2%5D=0&F%5BBBREED_PARAMETER3%5D=0&F%5BCOUNTRY%5D=0&F%5BREGION%5D=0&F%5BRAION%5D=0&F%5BCITY%5D=0&F%5BPUNKT%5D=0"
     url = f"{base_url}&PAGEN_1={page_num}"
 
     html = await fetch_zooportal_page(url)
-    # logger.info(f"------------------------ HTML: {html}")
     return parse_zooportal_search_results(html)
-
 
 def parse_zooportal_dog_info(soup: BeautifulSoup, dog_id: str) -> Dict:
     """Парсит основную информацию собаки со страницы собаки с Zooportal"""
@@ -169,7 +340,7 @@ def parse_zooportal_dog_info(soup: BeautifulSoup, dog_id: str) -> Dict:
                 photo_url = f"{MAIN_ZOOPORTAL_URL}{href}"
             else:
                 photo_url = href
-            logger.info(f"Фото найдено через fancybox: {photo_url}")
+            # logger.info(f"Фото найдено через fancybox: {photo_url}")
 
     # 2. Если не нашли, пробуем через img
     if not photo_url:
@@ -360,13 +531,7 @@ def parse_zooportal_dog_info(soup: BeautifulSoup, dog_id: str) -> Dict:
     titles_data = parse_titles_from_html(soup)
     if titles_data:
         info['titles'] = titles_data
-        # logger.info(f"Найдено титулов для собаки {dog_id}: {len(titles_data)}")
 
-    # 9. Генерируем UUID (перенесено в parse_normal_dog_data_and_create_dog(raw: Dict[str, Any], source: str) в zooportal_integration
-    # uuid_str = f"zooportal_{dog_id}"
-    # info['uuid'] = hashlib.md5(uuid_str.encode()).hexdigest()
-
-    # logger.info(f"======================== DOG_INFO: {info}")
     return info
 
 
@@ -503,284 +668,19 @@ def parse_zooportal_pedigree_table(soup: BeautifulSoup, dog_id: str) -> Dict:
 
     return pedigree
 
-#
-# def parse_titles_from_html(soup: BeautifulSoup) -> List[Dict[str, Any]]:
-#     """
-#     Полный парсер титулов из HTML страницы Zooportal.
-#     Обрабатывает: "GrCH.RUS, CH.RUS, CH.CL RUS" и другие форматы.
-#     """
-#     titles_data = []
-#
-#     # Ищем div с классом 'titles' (исключаем subtitle с весом/ростом)
-#     titles_div = soup.find('div', class_='titles')
-#     if not titles_div:
-#         return titles_data
-#
-#     # Проверяем, что это не блок с весом/ростом
-#     div_classes = titles_div.get('class', [])
-#     if 'subtitle' in div_classes:
-#         return titles_data
-#
-#     titles_text = titles_div.get_text(strip=True)
-#     if not titles_text:
-#         return titles_data
-#
-#     logger.info(f"Найден текст титулов: '{titles_text}'")
-#
-#     # Нормализуем текст: убираем лишние пробелы, приводим к единому формату
-#     normalized_text = re.sub(r'\s+', ' ', titles_text.strip())
-#
-#     # Разделяем титулы по запятым
-#     raw_titles = [t.strip() for t in normalized_text.split(',')]
-#
-#     for raw_title in raw_titles:
-#         if not raw_title:
-#             continue
-#
-#         # Извлекаем код страны
-#         country = extract_country_code(raw_title)
-#
-#         # Приводим к нижнему регистру для сравнения
-#         title_lower = raw_title.lower()
-#
-#         # Инициализируем значения по умолчанию
-#         short_name = raw_title
-#         long_name = raw_title
-#         is_prefix = True
-#
-#         # ОПРЕДЕЛЯЕМ ТИП ТИТУЛА (от специфичного к общему)
-#
-#         # 1. GrCH - Гранд Чемпион (самый высокий титул)
-#         if 'grch' in title_lower or 'гранд чемпион' in title_lower:
-#             short_name = "GrCH"
-#             long_name = "Гранд Чемпион"
-#             is_prefix = True
-#
-#         # 2. CH.CL - Чемпион Национального клуба породы
-#         elif 'ch.cl' in title_lower or 'нкп' in title_lower or 'ch club' in title_lower:
-#             short_name = "CH.CL"
-#             long_name = "Чемпион Национального клуба породы"
-#             is_prefix = True
-#
-#         # 3. JCH - Юниор Чемпион
-#         elif 'jch' in title_lower or 'юниор' in title_lower:
-#             short_name = "JCH"
-#             long_name = "Юниор Чемпион"
-#             is_prefix = True
-#
-#         # 4. VCH - Ветеран Чемпион
-#         elif 'vch' in title_lower or 'ветеран' in title_lower:
-#             short_name = "VCH"
-#             long_name = "Ветеран Чемпион"
-#             is_prefix = True
-#
-#         # 5. INT - Интернациональный Чемпион
-#         elif 'int' in title_lower or 'интер' in title_lower or 'international' in title_lower:
-#             short_name = "INT"
-#             long_name = "Интернациональный Чемпион"
-#             is_prefix = True
-#
-#         # 6. EU - Европейский Чемпион
-#         elif 'eu' in title_lower or 'европ' in title_lower or 'european' in title_lower:
-#             short_name = "EU"
-#             long_name = "Европейский Чемпион"
-#             is_prefix = True
-#
-#         # 7. WORLD - Чемпион Мира
-#         elif 'world' in title_lower or 'мир' in title_lower:
-#             short_name = "WORLD"
-#             long_name = "Чемпион Мира"
-#             is_prefix = True
-#
-#         # 8. BCH - Чемпион породы
-#         elif 'bch' in title_lower or 'breed champion' in title_lower:
-#             short_name = "BCH"
-#             long_name = "Чемпион породы"
-#             is_prefix = True
-#
-#         # 9. CH - Чемпион (общий случай - проверяем в последнюю очередь)
-#         elif 'ch' in title_lower or 'чемпион' in title_lower:
-#             # Проверяем, что это не часть другого титула
-#             if not any(x in title_lower for x in ['grch', 'jch', 'vch', 'bch', 'ich']):
-#                 short_name = "CH"
-#                 long_name = "Чемпион"
-#                 is_prefix = True
-#
-#         # 10. CACIB - Сертификат международной выставки
-#         elif 'cacib' in title_lower:
-#             short_name = "CACIB"
-#             long_name = "Сертификат международной выставки"
-#             is_prefix = False
-#
-#         # 11. CAC - Сертификат соответствия породе
-#         elif 'cac' in title_lower and 'cacib' not in title_lower:
-#             short_name = "CAC"
-#             long_name = "Сертификат соответствия породе"
-#             is_prefix = False
-#
-#         # 12. ЧК, КЧК - Чемпион клуба, Кандидат в чемпионы клуба
-#         elif 'чк' in title_lower or 'кчк' in title_lower:
-#             if 'чк' in title_lower:
-#                 short_name = "ЧК"
-#                 long_name = "Чемпион клуба"
-#             else:
-#                 short_name = "КЧК"
-#                 long_name = "Кандидат в чемпионы клуба"
-#             is_prefix = False
-#
-#         # 13. ЛП, ЛС - Лучший представитель породы, Лучший щенок
-#         elif 'лп' in title_lower or 'лс' in title_lower:
-#             if 'лп' in title_lower:
-#                 short_name = "ЛП"
-#                 long_name = "Лучший представитель породы"
-#             else:
-#                 short_name = "ЛС"
-#                 long_name = "Лучший щенок"
-#             is_prefix = False
-#
-#
-#         # Проверяем, есть ли год в титуле
-#         winner_year = None
-#         has_winner_year = False
-#         year_match = re.search(r'\b(19|20)\d{2}\b', raw_title)
-#         if year_match:
-#             winner_year = int(year_match.group())
-#             has_winner_year = True
-#
-#         # Сохраняем титул со всеми данными
-#         titles_data.append({
-#             'short_name': short_name,
-#             'long_name': long_name.strip(),
-#             'country': country,  # Код страны: "RUS", "RKF", "BY" и т.д.
-#             'raw_text': raw_title,  # Оригинальный текст
-#             'is_prefix': is_prefix,  # True для префиксов (GrCH, CH и т.д.)
-#             'has_winner_year': has_winner_year,  # Есть ли год
-#             'winner_year': winner_year  # Год получения титула
-#         })
-#
-#     logger.info(f"Распарсено {len(titles_data)} титулов")
-#     return titles_data
-#
-#
-# def extract_country_code(raw_title: str) -> Optional[str]:
-#     """
-#     Извлекает код страны из текста титула.
-#
-#     Примеры:
-#     - "GrCH.RUS" → "RUS"
-#     - "CH.CL RUS" → "RUS"
-#     - "CH RUS" → "RUS"
-#     - "Чемпион России" → "RUS"
-#     - "INT.RKF" → "RKF"
-#     """
-#     # Приводим к верхнему регистру для поиска
-#     title_upper = raw_title.upper()
-#
-#     # 1. Ищем код страны после точки: GrCH.RUS, CH.RUS
-#     match = re.search(r'\.([A-Z]{2,4})\b', title_upper)
-#     if match:
-#         country = match.group(1)
-#         # Проверяем, что это действительно код страны, а не часть титула
-#         if country not in ['CH', 'CL', 'CAC', 'CACIB', 'INT', 'EU', 'WORLD']:
-#             return country
-#
-#     # 2. Ищем код страны после пробела: CH.CL RUS, CH CL RUS
-#     match = re.search(r'\s([A-Z]{2,4})\b', title_upper)
-#     if match:
-#         country = match.group(1)
-#         if country not in ['CH', 'CL', 'CAC', 'CACIB']:
-#             return country
-#
-#     # 3. Ищем русские названия стран
-#     if 'РОССИИ' in title_upper or 'RUS' in title_upper or 'РФ' in title_upper:
-#         return "RUS"
-#     elif 'РКФ' in title_upper or 'RKF' in title_upper:
-#         return "RKF"
-#     elif 'БЕЛАРУСИ' in title_upper or 'BY' in title_upper or 'БЕЛ' in title_upper:
-#         return "BY"
-#     elif 'УКРАИНЫ' in title_upper or 'UA' in title_upper or 'УКР' in title_upper:
-#         return "UA"
-#     elif 'КАЗАХСТАНА' in title_upper or 'KZ' in title_upper or 'КАЗ' in title_upper:
-#         return "KZ"
-#
-#     # 4. Ищем в скобках
-#     match = re.search(r'\(([A-Z]{2,4})\)', title_upper)
-#     if match:
-#         return match.group(1)
-#
-#     return None
-#
-#
-# def get_country_display_name(country_code: str) -> str:
-#     """
-#     Преобразует код страны в читаемое название на русском.
-#     """
-#     country_map = {
-#         # Основные
-#         'RUS': 'Россия',
-#         'RU': 'Россия',
-#         'РФ': 'Россия',
-#
-#         # РКФ
-#         'RKF': 'РКФ',
-#
-#         # СНГ
-#         'BY': 'Беларусь',
-#         'BLR': 'Беларусь',
-#         'UA': 'Украина',
-#         'UKR': 'Украина',
-#         'KZ': 'Казахстан',
-#         'KAZ': 'Казахстан',
-#
-#         # Балтия
-#         'LV': 'Латвия',
-#         'LVA': 'Латвия',
-#         'LT': 'Литва',
-#         'LTU': 'Литва',
-#         'EE': 'Эстония',
-#         'EST': 'Эстония',
-#
-#         # Европа
-#         'PL': 'Польша',
-#         'POL': 'Польша',
-#         'CZ': 'Чехия',
-#         'CZE': 'Чехия',
-#         'SK': 'Словакия',
-#         'SVK': 'Словакия',
-#         'HU': 'Венгрия',
-#         'HUN': 'Венгрия',
-#         'RO': 'Румыния',
-#         'ROU': 'Румыния',
-#         'BG': 'Болгария',
-#         'BGR': 'Болгария',
-#
-#         # FCI
-#         'FCI': 'FCI',
-#
-#         # Другие
-#         'MD': 'Молдова',
-#         'MDA': 'Молдова',
-#         'GE': 'Грузия',
-#         'GEO': 'Грузия',
-#         'AM': 'Армения',
-#         'ARM': 'Армения',
-#         'AZ': 'Азербайджан',
-#         'AZE': 'Азербайджан',
-#     }
-#
-#     return country_map.get(country_code.upper(), country_code)
-
+@cached(ttl=7200)
 async def parse_zooportal_dog_page(dog_id: str, generations: int = 3) -> Dict:
     """
-    Основная функция парсинга (без сохранения в БД) страницы собаки с родословной
-
-    Args:
-        dog_id: ID собаки на Zooportal
-        generations: глубина родословной (реализовано для 3)
-
-    Returns:
-        Словарь с информацией о собаке и родословной
+    Основная функция парсинга страницы собаки с родословной
+    Теперь с кэшированием
     """
+    # Сначала проверяем специализированный кэш собаки
+    cached_dog_data = await get_dog_data_from_cache(dog_id, "zooportal")
+    if cached_dog_data and cached_dog_data.get('has_details', False):
+        logger.info(f"Данные собаки {dog_id} взяты из кэша")
+        return cached_dog_data.get('data')
+
+    # Если нет в кэше, парсим
     url = f"{ZOOPORTAL_BASE_URL}{ZOOPORTAL_DOG_PATH}/{dog_id}/?COUNT_GENERATIONS={generations}"
     html = await fetch_zooportal_page(url)
 
@@ -789,19 +689,24 @@ async def parse_zooportal_dog_page(dog_id: str, generations: int = 3) -> Dict:
     pedigree = parse_zooportal_pedigree_table(soup, dog_id)
 
     dog_info['zooportal_id'] = dog_id
-    logger.info(f"-------------------------- DOG_DATA 2: {dog_info}")
 
-    # logger.info(f"-------------------------- dog_info: {dog_info}")
-    # logger.info(f"-------------------------- pedigree: {pedigree}")
-    # logger.info(f"-------------------------- generations: {generations}")
-
-    return {
+    result = {
         'dog_info': dog_info,
         'pedigree': pedigree,
         'generations': generations,
         'source': 'zooportal.pro'
     }
 
+    # Сохраняем в специализированный кэш собак
+    await save_dog_data_to_cache(
+        dog_id,
+        result,
+        source="zooportal",
+        has_details=True,
+        ttl=7200  # 2 часа
+    )
+
+    return result
 
 def normalize_zooportal_basic(dog_zooportal_data: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -839,7 +744,7 @@ def normalize_zooportal_basic(dog_zooportal_data: Dict[str, Any]) -> Dict[str, A
         "kennel": dog_zooportal_data.get("kennel") or "",
 
         "link_name": dog_zooportal_data.get("link_name") or "",
-        "uuid": dog_zooportal_data.get("uuid") or "",  # ВАЖНО: это НЕ breedarchive uuid, а созданный из zooportal_id (вероятнее весго тут передатся "")
+        "uuid": dog_zooportal_data.get("uuid") or "",  # это НЕ breedarchive uuid, а созданный из zooportal_id (вероятнее весго тут передатся "")
     }
     # Добавляем ссылки для владельца и заводчика
     for key in ['breeder_url', 'owner_url']:

@@ -2,94 +2,33 @@ import asyncio
 import hashlib
 import logging
 import re
-from datetime import datetime, timezone
-from typing import Dict, List, Optional, Union, Any, Tuple
+from datetime import datetime
+from typing import Dict, Optional, Union, Any, Tuple
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert
 
 from models import Title
 from parsers.zooportal import (
     parse_zooportal_search_page,
     parse_zooportal_dog_page, normalize_zooportal_basic
 )
-from parsers.breedarchive import search_breedarchive_by_name, process_animal_by_uuid, fetch_breedarchive_basic_info, \
-    normalize_breedarchive_basic
+from parsers.breedarchive import fetch_breedarchive_basic_info, normalize_breedarchive_basic
 
 from models.dog import Dog
 from models.people import Breeder, Owner
 from models.associations import DogBreederLink, DogOwnerLink
-from utils.dog_matcher import find_existing_dog, detect_conflicts, merge_dog_data, detect_dict_conflicts
+from utils.dog_matcher import merge_dog_data, detect_dict_conflicts
 from core.database import session_scope
-from utils.parser_utils import transliterate_russian_to_english, parse_int, parse_date, parse_datetime, get_photo_url, \
-    parse_coi, parse_float, parse_titles_from_text
+from utils.parser_utils import parse_int, parse_datetime, parse_coi, parse_float, parse_titles_from_text
+
+from utils.memory_cache import get_dog_data_from_cache, _dog_db_cache, _dog_db_cache_expiry
+from utils.memory_cache import get_dog_db_cache, set_dog_db_cache
 import time
+from sqlalchemy.exc import IntegrityError
 
 logger = logging.getLogger(__name__)
-
-# Глобальный кэш для запросов к BreedArchive (в памяти)
-_breedarchive_cache = {
-    'search': {},  # name -> uuid
-    'processed': {},  # uuid -> dog_data
-    'search_timestamps': {}  # name -> timestamp (для инвалидации)
-}
-
-# Время жизни кэша (секунды)
-CACHE_TTL = 300
-
-
-def _clear_expired_cache():
-    """Очистка устаревших записей кэша"""
-    current_time = time.time()
-    expired_keys = []
-    for key, timestamp in _breedarchive_cache['search_timestamps'].items():
-        if current_time - timestamp > CACHE_TTL:
-            expired_keys.append(key)
-
-    for key in expired_keys:
-        _breedarchive_cache['search'].pop(key, None)
-        _breedarchive_cache['search_timestamps'].pop(key, None)
-
-# TODO Переделать
-async def search_in_breedarchive_with_cache(dog_name: str, session_id: str = "") -> Optional[str]:
-    """Ищет собаку в BreedArchive по имени с кэшированием (если будут дублированные запросы, могли получить из кеша данные)"""
-    if not dog_name:
-        return None
-
-    # Очищаем устаревший кэш
-    _clear_expired_cache()
-
-    # Нормализуем имя для кэша
-    cache_key = f"{session_id}:{dog_name.lower().strip()}"
-
-    # Проверяем кэш
-    if cache_key in _breedarchive_cache['search']:
-        logger.info(f"Cache hit for: '{dog_name}'")
-        return _breedarchive_cache['search'].get(cache_key)
-
-    # Если нет в кэше - делаем запрос
-    logger.info(f"Searching BreedArchive for: '{dog_name}'")
-
-    # Прямой поиск
-    try:
-        uuid = await search_breedarchive_by_name(dog_name)
-        if uuid:
-            _breedarchive_cache['search'][cache_key] = uuid
-            _breedarchive_cache['search_timestamps'][cache_key] = time.time()
-            return uuid
-    except Exception as e:
-        logger.error(f"Error searching breedarchive for {dog_name}: {e}")
-
-        uuid = await search_breedarchive_by_name(dog_name)
-        if uuid:
-            _breedarchive_cache['search'][cache_key] = uuid
-            _breedarchive_cache['search_timestamps'][cache_key] = time.time()
-            return uuid
-
-    # Сохраняем None в кэш, чтобы не искать снова
-    _breedarchive_cache['search'][cache_key] = None
-    _breedarchive_cache['search_timestamps'][cache_key] = time.time()
-    return None
 
 
 async def search_in_breedarchive(dog_name: str, return_basic_info: bool = False) -> Optional[Union[str, Dict]]:
@@ -114,10 +53,41 @@ def create_uuid_from_str(str: str) -> str:
     # Генерируем MD5 хеш
     return hashlib.md5(uuid_str.encode()).hexdigest()
 
+def create_uuid_from_dict(data: Dict[str, Any], source: str) -> str:
+    """
+    Генерирует стабильный UUID на основе источника данных.
+    ПРИОРИТЕТЫ:
+    1. BreedArchive UUID (если есть)
+    2. Zooportal UUID на основе zooportal_id (если есть)
+    3. Универсальный UUID на основе имени, пола, source
+    """
+    # 1. Если это BreedArchive и есть UUID из BA
+    if source == "breedarchive.com" and data.get("uuid"):
+        return data["uuid"]
+
+    # 2. Если есть zooportal_id
+    if source == "zooportal.pro" and data.get("zooportal_id"):
+        zooportal_id = str(data.get("zooportal_id", "")).strip()
+        if zooportal_id and zooportal_id != "0":
+            return hashlib.md5(f"zooportal_{zooportal_id}".encode()).hexdigest()
+
+    # 3. Если есть hash из zoo_hash
+    if data.get("zoo_hash"):
+        return data["zoo_hash"]  # zoo_hash уже hex-строка
+
+    # 4. Универсальный fallback
+    name = data.get("registered_name", "").strip()
+    sex = data.get("sex", 0)
+
+    base_string = f"{name}|{sex}|{source}"
+    return hashlib.md5(base_string.encode()).hexdigest()
+
+
 async def process_ancestor_from_zooportal(
     session: AsyncSession,
     ancestor_data: Dict[str, Any],
     *,
+    current_dog_id: Optional[str] = None,
     cache_by_name: Optional[Dict[str, int]] = None,  # ancestor_name -> Dog.id
 ) -> Optional[Dog]:
     """Обрабатывает предка из Zooportal (кеш по ancestor_name)."""
@@ -145,17 +115,8 @@ async def process_ancestor_from_zooportal(
                 return await session.get(Dog, cached_id)
 
 
-        # 1) СНАЧАЛА ищем в БД — по zooportal_id, если он есть (по zoo_hash)
-        # if zooportal_id:
-        #     existingDog = await find_dog_by_zooportal_id(str(zooportal_id), session)
-        #     if existingDog:
-        #         dog = existingDog
-        #         # ===== cache set =====
-        #         if cache_by_name is not None and getattr(dog, "id", None):
-        #             cache_by_name[cache_key] = dog.id
-        #         return dog
         dog_hash = generate_zoo_hash(ancestor_data)
-        existingDog = await find_dog_by_zoo_hash(dog_hash, session)
+        existingDog = await find_dog_cached(session, zoo_hash=dog_hash)
         if existingDog:
             # ===== cache set =====
             if cache_by_name is not None and getattr(existingDog, "id", None):
@@ -196,58 +157,18 @@ async def process_ancestor_from_zooportal(
                         "breedarchive"
                     )
                     basic_data["titles"] = dogTitles
-                    await save_dog_titles(new_dog, basic_data, session)
+                    try:
+                        await save_update_dog_titles(new_dog, basic_data, session)
+                    except Exception as e:
+                        logger.error(f"Error processing breedarchive dog`s titles by uuid: {breedarchive_uuid}: {e}")
 
                     if cache_by_name is not None and getattr(new_dog, "id", None):
                         cache_by_name[cache_key] = new_dog.id
                     return new_dog
             except Exception as e:
                 logger.error(f"Error processing BreedArchive ancestor {ancestor_name}: {e}")
-                # ОТКАТ ТРАНЗАКЦИИ при ошибке
-                try:
-                    await session.rollback()
-                except:
-                    pass
-                # basic_data = await fetch_breedarchive_basic_info(breedarchive_uuid)
-                # if basic_data:
-                    # 2.1) если уже есть в БД по BA uuid (дополнительная проверка)
-                    # res = await session.execute(select(Dog).where(Dog.uuid == breedarchive_uuid))
-                    # existing = res.scalars().first()
-                    #
-                    # if existing:
-                    #     dog = existing
-                    #     has_changes, _ = merge_dog_data(dog, basic_data, "breedarchive.com")
-                    #     if has_changes:
-                    #         session.add(dog)
-                    #         await session.flush()
+                raise
 
-                        # ===== cache set =====
-                        # if cache_by_name is not None and getattr(dog, "id", None):
-                        #     cache_by_name[cache_key] = dog.id
-                        # return dog
-
-                    # 2.2) иначе создаём нового предка из BA basic
-                    # new_dog = create_dog_from_basic_info_with_breedarchive(
-                    #     basic_data, ancestor_data, zooportal_id, sex
-                    # )
-                    # session.add(new_dog)
-                    # await session.flush()
-
-                    # # Сохранение титулов из бридарчив
-                    # dogTitles = parse_titles_from_text(
-                    #     basic_data.get('prefix_titles') or basic_data.get('prefixTitles'), "breedarchive")
-                    # basic_data["titles"] = dogTitles
-                    # await save_dog_titles(new_dog, basic_data, session)
-
-                    # ===== cache set =====
-                    # if cache_by_name is not None and getattr(new_dog, "id", None):
-                    #     cache_by_name[cache_key] = new_dog.id
-                    #
-                    # return new_dog
-
-            # except Exception as e:
-            #     logger.error(f"Error processing basic BreedArchive ancestor {ancestor_name}: {e}")
-                # fallback дальше
 
         else:
             normalized = normalize_zooportal_ancestor_node(ancestor_data)
@@ -261,10 +182,7 @@ async def process_ancestor_from_zooportal(
                 return new_dog
     except Exception as e:
         logger.error(f"Error processing ancestor: {e}")
-        try:
-            await session.rollback()
-        except:
-            pass
+        raise
         return None
 
 
@@ -276,32 +194,30 @@ async def process_zooportal_dog_with_ancestors(
 ) -> Optional[Dog]:
     """Основная функция обработки собаки с предками из Zooportal"""
     try:
-        # 1. Парсим данные с Zooportal
-        logger.info(f"Parsing dog {dog_id} from Zooportal...")
-        parsed_data = await parse_zooportal_dog_page(dog_id, max_generations)
 
-        if not parsed_data:
-            logger.error(f"Failed to parse dog {dog_id}")
-            return None
+        # 1. Проверяем кэш собаки
+        cached_dog_data = await get_dog_data_from_cache(dog_id, "zooportal")
 
-        dog_info = parsed_data['dog_info']
-        pedigree = parsed_data['pedigree']
-        # logger.info(f"************************** pedigree: {pedigree}")
+        if cached_dog_data and cached_dog_data.get('has_details', False):
+            logger.info(f"Данные собаки {dog_id} из кэша, пропускаем парсинг")
+            dog_data = cached_dog_data['data']
+        else:
+            # 2. Парсим данные с Zooportal (автоматически кэшируется в zooportal.py)
+            logger.info(f"Парсинг собаки {dog_id} из Zooportal")
+            dog_data = await parse_zooportal_dog_page(dog_id, max_generations)
 
-        # Убедимся, что имя не пустое
+        dog_info = dog_data['dog_info']
+        pedigree = dog_data['pedigree']
         dog_name = dog_info.get('registered_name', '').strip()
-
-        dog = None
-
-        # 2. Ищем в БД, если есть
-        # existingDog = await find_dog_by_zooportal_id(dog_id, session)
+        basic_data = None
+        # 3. Ищем в БД (с кэшированием)
         dog_hash = generate_zoo_hash(dog_info)
-        existingDog = await find_dog_by_zoo_hash(dog_hash, session)
+        existingDog = await find_dog_cached(session, zoo_hash=dog_hash, zooportal_id=dog_id)
 
         if existingDog:
             logger.info(f"Dog with Zooportal_ID {dog_id} already exists, using existing record")
             dog = existingDog
-            # TODO доделать merge_dog_data на обновление данных
+
             has_changes, conflicts = merge_dog_data(dog, dog_info, "zooportal.pro")
             if has_changes:
                 session.add(dog)
@@ -320,45 +236,7 @@ async def process_zooportal_dog_with_ancestors(
                 else:
                     breedarchive_uuid = search_result
 
-            # 4. Если нашли в BreedArchive, обрабатываем оттуда
-            # if breedarchive_uuid:
-            #     try:
-            #         logger.info(f"Found in BreedArchive: {breedarchive_uuid}")
-            #         # TODO в отдельную функцию вынести код
-            #         # Получаем базовую информацию (если ещё не получили)
-            #         if not breedarchive_basic_info:
-            #             basic_data = await fetch_breedarchive_basic_info(breedarchive_uuid)
-            #         else:
-            #             basic_data = breedarchive_basic_info
-            #         #
-            #         # # TODO в отдельную функцию вынести код
-            #         # res = await session.execute(
-            #         #     select(Dog).where(Dog.uuid == breedarchive_uuid))
-            #         # existingBreedarchiveDogInDB = res.scalars().first()
-            #
-            #         # if existingBreedarchiveDogInDB:
-            #         #     dog = existingBreedarchiveDogInDB
-            #         #     logger.info(f"Found in DB with BreedArchive UUID: {breedarchive_uuid}")
-            #         # if basic_data:
-            #         #     has_changes, conflicts = merge_dog_data(dog, basic_data, "zooportal.pro")
-            #         #     if has_changes:
-            #         #         session.add(dog)
-            #         #         await session.flush()
-            #         # else:
-            #         # Создаем собаку из базовых данных и с zooportal данными
-            #         dog = create_dog_from_basic_info_with_breedarchive(basic_data, dog_info, dog_id)
-            #         session.add(dog)
-            #         await session.flush()
-            #
-            #         # Сохранение титулов из бридарчив
-            #         dogTitles = parse_titles_from_text(
-            #             basic_data.get('prefix_titles') or basic_data.get('prefixTitles'), "breedarchive")
-            #         basic_data["titles"] = dogTitles
-            #         await save_dog_titles(dog, basic_data, session)
-            #
-            #     except Exception as e:
-            #         logger.error(f"Error processing breedarchive dog: {e}")
-            #         dog = None
+
             if breedarchive_uuid:
                 try:
                     result = await session.execute(
@@ -372,13 +250,17 @@ async def process_zooportal_dog_with_ancestors(
                         logger.info(f"Dog with UUID {breedarchive_uuid} already exists")
                         has_changes, conflicts = merge_dog_data(dog, basic_data, "breedarchive.com")
                         if has_changes:
-                            session.add(dog)
+                            # session.add(dog)
                             await session.flush()
                             # Сохранение титулов из бридарчив
                             dogTitles = parse_titles_from_text(
                                 basic_data.get('prefix_titles') or basic_data.get('prefixTitles'), "breedarchive")
                             basic_data["titles"] = dogTitles
-                            await save_dog_titles(dog, basic_data, session)
+                            try:
+                                await save_update_dog_titles(dog, basic_data, session)
+                            except Exception as e:
+                                logger.error(
+                                    f"Error processing breedarchive dog`s titles by uuid: {breedarchive_uuid}: {e}")
                     else:
                         dog = create_dog_from_basic_info_with_breedarchive(
                             basic_data, dog_info, dog_id, dog_info.get('sex')
@@ -389,14 +271,13 @@ async def process_zooportal_dog_with_ancestors(
                         dogTitles = parse_titles_from_text(
                             basic_data.get('prefix_titles') or basic_data.get('prefixTitles'), "breedarchive")
                         basic_data["titles"] = dogTitles
-                        await save_dog_titles(dog, basic_data, session)
+                        try:
+                            await save_update_dog_titles(dog, basic_data, session)
+                        except Exception as e:
+                            logger.error(f"Error processing breedarchive dog`s titles by uuid: {breedarchive_uuid}: {e}")
                 except Exception as e:
                     logger.error(f"Error processing breedarchive dog by uuid: {breedarchive_uuid}: {e}")
-                    # ОТКАТ ТРАНЗАКЦИИ при ошибке
-                    try:
-                        await session.rollback()
-                    except:
-                        pass
+                    raise
 
             # 5. Если не нашли в BreedArchive, создаем из Zooportal с имеющимися данными
             else:
@@ -409,8 +290,9 @@ async def process_zooportal_dog_with_ancestors(
                     await session.flush()
                 except Exception as e:
                     logger.error(f"Error creating dog from Zooportal: {dog_name}: {e}")
-                    await session.rollback()
+                    # await session.rollback()
                     dog = None
+                    raise
 
         try:
             await save_owner_and_breeder(dog, dog_info, session)
@@ -420,7 +302,7 @@ async def process_zooportal_dog_with_ancestors(
 
         try:
             # Сохранение титулов из зоопортал
-            await save_dog_titles(dog, dog_info, session)
+            await save_update_dog_titles(dog, dog_info, session)
         except Exception as e:
             logger.warning(f"Не удалось сохранить титулы для собаки с Dog_id: {dog.id} , Dog_name: ({dog.registered_name}): {e}")
             logger.debug(f"Ошибка детально:", exc_info=True)
@@ -440,8 +322,6 @@ async def process_zooportal_dog_with_ancestors(
             # 7.1. Обрабатываем базовые child_id из таблицы (нужно, чтобы можно было ставить родителям связи)
             for base_key, base_meta in (pedigree.get('base_dogs') or {}).items():
                 child_zoo_id = base_meta.get('zooportal_id')
-                # logger.info(f"++++++++++++++++++ base_meta: {base_meta}")
-                # child_zoo_name = base_meta.get('registered_name')
 
                 if not child_zoo_id:
                     continue
@@ -454,7 +334,6 @@ async def process_zooportal_dog_with_ancestors(
                     ba_name_cache=ba_name_cache,
                 )
                 if base_dog:
-                    # logger.info(f"++++++++++++++++++ base_dog: {base_dog}")
                     node_to_dog_id[base_key] = base_dog.id
 
             # 7.2. Обрабатываем всех предков из таблицы (каждый предок = отдельная запись Dog)
@@ -464,6 +343,7 @@ async def process_zooportal_dog_with_ancestors(
                         session,
                         ancestor_data,
                         # cache_by_key=cache_by_key,
+                        current_dog_id=dog_id,
                         cache_by_name=ba_name_cache,
                         # ba_uuid_cache=ba_uuid_cache,
                     )
@@ -509,14 +389,6 @@ async def process_zooportal_dog_with_ancestors(
         logger.error(f"Error processing dog {dog_id}: {e}")
         return None
 
-def stable_uuid_from_ancestor(*, zooportal_id: Optional[str], guid: Optional[str], name: str) -> str:
-    """
-    Делает стабильный uuid для предка, если нет настоящего uuid (как у zooportal page).
-    Приоритет: zooportal_id -> guid -> name
-    """
-    base = (str(zooportal_id or "").strip() or str(guid or "").strip() or name.strip() or "unknown")
-    return hashlib.md5(base.encode("utf-8")).hexdigest()
-
 
 def normalize_zooportal_ancestor_node(ancestor: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -556,6 +428,7 @@ def normalize_zooportal_ancestor_node(ancestor: Dict[str, Any]) -> Dict[str, Any
     }
     return normalized
 
+# Старая (временная) функция
 def create_dog_from_zooportal_ancestor_node(ancestor: Dict[str, Any]) -> Dog:
     """
     Создаёт Dog из одного узла pedigree['ancestors'].
@@ -613,7 +486,6 @@ async def ensure_base_dog_cached(
         return None
 
     dog_info = parsed_data['dog_info']
-    # TODO сделать обработку и их предков (чтобы не отправлять еще больше запросов)
     # pedigree = parsed_data['pedigree']  # для ensure не обязателен
 
     # Убедимся, что имя не пустое
@@ -622,12 +494,12 @@ async def ensure_base_dog_cached(
     # 2. Ищем в БД, если есть
     # existingDog = await find_dog_by_zooportal_id(str(child_zoo_id), session)
     dog_hash = generate_zoo_hash(dog_info)
-    existingDog = await find_dog_by_zoo_hash(dog_hash, session)
-
+    # existingDog = await find_dog_by_zoo_hash(dog_hash, session)
+    existingDog = await find_dog_cached(session, zoo_hash=dog_hash)
     if existingDog:
         logger.info(f"Dog with Zooportal_ID {child_zoo_id} already exists, using existing record")
         dog = existingDog
-        # TODO доделать merge_dog_data на обновление данных
+
         has_changes, conflicts = merge_dog_data(dog, dog_info, "zooportal.pro")
         if has_changes:
             session.add(dog)
@@ -659,15 +531,15 @@ async def ensure_base_dog_cached(
         if breedarchive_uuid:
             try:
                 logger.info(f"Found in BreedArchive: {breedarchive_uuid}")
-                # TODO логику на проверку айди чтобы найти точно ту собаку (левенштейна)
-                # TODO в отдельную функцию вынести код
+
+
                 # Получаем базовую информацию (если ещё не получили)
                 if not breedarchive_basic_info:
                     basic_data = await fetch_breedarchive_basic_info(breedarchive_uuid)
                 else:
                     basic_data = breedarchive_basic_info
 
-                # TODO в отдельную функцию вынести код
+
                 res = await session.execute(
                     select(Dog).where(Dog.uuid == breedarchive_uuid))
                 existingBreedarchiveDogInDB = res.scalars().first()
@@ -678,7 +550,7 @@ async def ensure_base_dog_cached(
                     if basic_data:
                         has_changes, conflicts = merge_dog_data(dog, basic_data, "zooportal.pro")
                         if has_changes:
-                            session.add(dog)
+                            # session.add(dog)
                             await session.flush()
                 else:
                     # Создаем собаку из базовых данных и с zooportal данными
@@ -700,8 +572,9 @@ async def ensure_base_dog_cached(
                 await session.flush()
             except Exception as e:
                 logger.error(f"Error creating dog from Zooportal: {dog_name}: {e}")
-                await session.rollback()
+                # await session.rollback()
                 dog = None
+                raise
 
 
     # Записываем в кеш, если собака получилась
@@ -915,13 +788,6 @@ def parse_normal_dog_data_and_create_dog(raw: Dict[str, Any], source: str) -> Do
     if raw.get("coi_updated_on"):
         coi_updated_on = parse_datetime(raw.get("coi_updated_on"))
 
-    # # Безопасное получение URL фото
-    # photo_url = None
-    # try:
-    #     if raw.get("primary_photo_path"):
-    #         photo_url = get_photo_url({'primary_photo_path': raw['primary_photo_path']})
-    # except Exception:
-    #     photo_url = None
 
     # Парсинг incomplete_pedigree
     incomplete_pedigree = False
@@ -932,22 +798,11 @@ def parse_normal_dog_data_and_create_dog(raw: Dict[str, Any], source: str) -> Do
         incomplete_pedigree = incomplete_raw.lower() in ['true', '1', 'yes', 't']
 
     # Получаем и валидируем UUID
-    existing_uuid = raw.get("uuid")
-    uuid_value = None
-
-    # 1. Проверяем существующий UUID
-    if existing_uuid is not None:
-        cleaned = str(existing_uuid).strip()
-        if cleaned and cleaned.lower() not in {"null", "none", "n/a", ""}:
-            uuid_value = cleaned
-
-    # 2. Если UUID невалиден или отсутствует - создаем новый
-    if not uuid_value:
-        # Используем registered_name как источник
-        name_for_uuid = raw.get("registered_name")
-        uuid_value = create_uuid_from_str(name_for_uuid)
-
-    # logger.info(f"UUID: {uuid_value}")
+    uuid_value = create_uuid_from_dict(data=raw, source=source)
+    if not uuid_value or uuid_value == "0" * 64:  # Все нули
+        # Аварийная генерация с временной меткой
+        timestamp = int(time.time() * 1000)
+        uuid_value = hashlib.md5(f"emergency_{timestamp}".encode()).hexdigest()
 
     # Базовые данные
     base_data = {
@@ -1102,16 +957,17 @@ def merge_prefer_left(left: Dict[str, Any], right: Dict[str, Any]) -> Dict[str, 
                 out[k] = rv
     return out
 
+
 async def process_zooportal_search_page_and_save(
         page_num: int = 1,
-        max_dogs: int = 10,
+        max_dogs: int = 11,
         delay_between_dogs: float = 2.0
 ) -> Dict:
-    """Обрабатывает страницу поиска на Zooportal и сохраняет всех собак в базу"""
+    """Обрабатывает страницу поиска на Zooportal и сохраняет собак так,
+    чтобы ошибка одной собаки НЕ откатывала остальных.
+    """
     try:
         logger.info(f"Processing Zooportal search page {page_num}")
-
-        # 1. Парсим страницу поиска
         dogs_list = await parse_zooportal_search_page(page_num)
 
         if not dogs_list:
@@ -1122,63 +978,65 @@ async def process_zooportal_search_page_and_save(
                 "message": "No dogs found"
             }
 
-        # 2. Ограничиваем количество собак для обработки
         dogs_to_process = dogs_list[:max_dogs]
-
         processed_dogs = []
         failed_dogs = []
 
-        # 3. Используем единую сессию для всех собак на странице
         async with session_scope() as session:
-            # 4. Обрабатываем каждую собаку
             for i, dog_data in enumerate(dogs_to_process):
+                dog_id = dog_data.get("dog_id")
+                dog_name = dog_data.get("registered_name")
+
+                logger.info(f"*** [{i + 1}/{len(dogs_to_process)}] Processing dog {dog_id}: {dog_name}")
+
                 try:
-                    dog_id = dog_data['dog_id']
-                    dog_name = dog_data['registered_name']
-
-                    logger.info(f"[{i + 1}/{len(dogs_to_process)}] Processing dog {dog_id}: {dog_name}")
-
-                    # или тут проверять существование в бд и рекурсивно по предкам проходиться с ссылками или
-                    # не проверять и пройтись по каждой собаке
-
-                    # Обрабатываем собаку с предками
                     dog = await process_zooportal_dog_with_ancestors(
-                        dog_id=dog_id,
-                        # max_generations=3,
+                        dog_id=str(dog_id),
                         session=session
                     )
 
-                    if dog:
-                        processed_dogs.append({
-                            # zooportal_id
-                            'dog_id': dog_id,
-                            # id in DB
-                            'dog_db_id': dog.id,
-                            'name': dog.registered_name,
-                            'source': dog.source,
-                            'status': 'processed'
-                        })
-                    else:
+                    if not dog:
                         failed_dogs.append({
-                            'dog_id': dog_id,
-                            'name': dog_name,
-                            'error': 'Failed to process'
+                            "dog_id": dog_id,
+                            "name": dog_name,
+                            "error": "Failed to process (returned None)"
                         })
+                        # IMPORTANT: откатим всё, что могло частично набраться
+                        await session.rollback()
+                        continue
 
-                    # Задержка между обработкой собак
-                    if i < len(dogs_to_process) - 1 and delay_between_dogs > 0:
-                        await asyncio.sleep(delay_between_dogs)
+                    # ВАЖНО: фиксируем результаты этой собаки отдельным коммитом
+                    await session.commit()
 
-                except Exception as e:
-                    logger.error(f"Error processing dog {dog_data.get('dog_id')}: {e}")
-                    failed_dogs.append({
-                        'dog_id': dog_data.get('dog_id', 'unknown'),
-                        'name': dog_data.get('registered_name', 'unknown'),
-                        'error': str(e)
+                    processed_dogs.append({
+                        "dog_id": dog_id,
+                        "dog_db_id": dog.id,
+                        "name": dog.registered_name,
+                        "source": dog.source,
+                        "status": "processed"
                     })
 
-            # 5. Сохраняем все изменения
-            await session.commit()
+                except IntegrityError as e:
+                    # Сессия после IntegrityError "сломана" пока не rollback
+                    await session.rollback()
+                    logger.error(f"IntegrityError processing dog {dog_id}: {e}", exc_info=True)
+                    failed_dogs.append({
+                        "dog_id": dog_id,
+                        "name": dog_name,
+                        "error": f"IntegrityError: {str(e)}"
+                    })
+
+                except Exception as e:
+                    await session.rollback()
+                    logger.error(f"Error processing dog {dog_id}: {e}", exc_info=True)
+                    failed_dogs.append({
+                        "dog_id": dog_id,
+                        "name": dog_name,
+                        "error": str(e)
+                    })
+
+                if i < len(dogs_to_process) - 1 and delay_between_dogs > 0:
+                    await asyncio.sleep(delay_between_dogs)
 
         return {
             "status": "success",
@@ -1191,12 +1049,8 @@ async def process_zooportal_search_page_and_save(
         }
 
     except Exception as e:
-        logger.error(f"Error processing Zooportal search page {page_num}: {e}")
-        return {
-            "status": "error",
-            "page": page_num,
-            "error": str(e)
-        }
+        logger.error(f"Error processing Zooportal search page {page_num}: {e}", exc_info=True)
+        return {"status": "error", "page": page_num, "error": str(e)}
 
 
 async def find_dog_by_zooportal_id(zooportal_id: str, session: AsyncSession) -> Dog | None:
@@ -1240,7 +1094,6 @@ async def find_dog_by_zoo_hash(zoo_hash: str, session: AsyncSession) -> Dog | No
         logging.error(f"Ошибка при поиске собаки по zoo_hash {zoo_hash}: {e}")
         return None
 
-# TODO: добавить колонку для ссылки на странциу владельцев (+доп инфа с их страницы, +зоопртал айди с их аккаунта)
 async def save_owner_and_breeder(dog: Dog, dog_data: Dict[str, Any], session: AsyncSession) -> None:
     """
     Сохраняет владельца и заводчика и устанавливает связи.
@@ -1327,82 +1180,234 @@ async def save_owner_and_breeder(dog: Dog, dog_data: Dict[str, Any], session: As
 
     await session.flush()
 
-# RU CH, UA CH, AZ CH, CY CH, ME CH
-async def save_dog_titles(dog: Dog, dog_data: Dict[str, Any], session: AsyncSession) -> None:
-    """
-    Сохраняет титулы собаки и устанавливает связи.
-    """
-    # Получаем титулы из данных
 
+def normalize_title_fields(short_name: str, long_name: str, country: str) -> tuple:
+    """
+    Нормализует поля титула к нижнему регистру и обрезает пробелы.
+    Возвращает кортеж (short_name_lower, long_name_clean, country_lower)
+    """
+    # Нормализация short_name
+    short_name_clean = str(short_name).strip() if short_name is not None else ""
+    short_name_lower = short_name_clean.lower()
+
+    # Нормализация long_name
+    long_name_clean = str(long_name).strip() if long_name is not None else ""
+    if not long_name_clean and short_name_clean:
+        long_name_clean = short_name_clean  # fallback
+
+    # Нормализация country
+    country_clean = str(country).strip() if country is not None else ""
+    if not country_clean:
+        country_clean = "unknown"
+    country_lower = country_clean.lower()
+
+    return short_name_lower, long_name_clean, country_lower
+
+
+async def save_update_dog_titles(dog: Dog, dog_data: Dict[str, Any], session: AsyncSession) -> None:
+    """
+    Сохраняет титулы собаки с нормализацией регистра и UPSERT логикой.
+    """
     if dog is None:
         return
 
     titles_list = dog_data.get('titles', [])
-    # logger.info(f"++++++++++++++++++++++++++ titles_list:  {titles_list}")
-
     if not titles_list:
-        # logger.info(f"У собаки {dog.id} нет титулов для сохранения")
+        logger.debug(f"У собаки {dog.id} ({dog.registered_name}) нет титулов для сохранения")
         return
 
-    # logger.info(f"Сохранение {len(titles_list)} титулов для собаки {dog.id}")
+    # logger.info(f"Сохранение {len(titles_list)} титулов для собаки {dog.id} ({dog.registered_name})")
+
+    successful_titles = 0
+    failed_titles = 0
 
     for title_info in titles_list:
         try:
-            # Получаем данные титула
-            short_name = title_info.get('short_name', '').strip()
-            long_name = title_info.get('long_name', '').strip()
-            raw_text = title_info.get('raw_text', '').strip()
+            # Безопасное извлечение данных с защитой от None
+            short_name_raw = title_info.get('short_name')
+            long_name_raw = title_info.get('long_name')
+            country_raw = title_info.get('country')
 
-            if not short_name:
-                # Пробуем получить short_name из raw_text
-                short_name = raw_text[:50] if raw_text else "UNKNOWN"
-
-            if not long_name:
-                long_name = raw_text if raw_text else short_name
-
-            # Проверяем, существует ли уже такой титул у собаки
-            title_query = select(Title).where(
-                Title.dog_id == dog.id,
-                Title.short_name == short_name
+            # Нормализация полей
+            short_name_lower, long_name_clean, country_lower = normalize_title_fields(
+                short_name=short_name_raw,
+                long_name=long_name_raw,
+                country=country_raw
             )
-            title_result = await session.execute(title_query)
-            existing_title = title_result.scalars().first()
 
-            if not existing_title:
-                # Создаем новый титул
-                title = Title(
-                    dog_id=dog.id,
-                    short_name=short_name,
-                    long_name=long_name,
-                    is_prefix=title_info.get('is_prefix', False),
-                    has_winner_year=title_info.get('has_winner_year', False),
-                    winner_year=title_info.get('winner_year'),
-                    country=title_info.get('country')
-                )
-                session.add(title)
-                # logger.debug(f"Добавлен новый титул для собаки {dog.id}: {short_name}")
-            else:
-                # Обновляем существующий титул
-                update_needed = False
+            # Пропускаем титулы без короткого имени
+            if not short_name_lower:
+                # logger.warning(f"Пустой short_name в титуле для собаки {dog.id}, пропускаем")
+                failed_titles += 1
+                continue
 
-                if existing_title.long_name != long_name:
-                    existing_title.long_name = long_name
-                    update_needed = True
+            # Дополнительные поля с безопасным извлечением
+            raw_text = str(title_info.get('raw_text', '')).strip() if title_info.get('raw_text') is not None else ""
 
-                if existing_title.raw_text != raw_text:
-                    existing_title.raw_text = raw_text
-                    update_needed = True
+            # Парсинг boolean полей с защитой
+            is_prefix = False
+            is_prefix_raw = title_info.get('is_prefix')
+            if isinstance(is_prefix_raw, bool):
+                is_prefix = is_prefix_raw
+            elif isinstance(is_prefix_raw, (str, int)):
+                is_prefix = str(is_prefix_raw).lower() in ['true', '1', 'yes', 't']
 
-                if existing_title.is_prefix != title_info.get('is_prefix', False):
-                    existing_title.is_prefix = title_info.get('is_prefix', False)
-                    update_needed = True
+            has_winner_year = False
+            has_winner_year_raw = title_info.get('has_winner_year')
+            if isinstance(has_winner_year_raw, bool):
+                has_winner_year = has_winner_year_raw
+            elif isinstance(has_winner_year_raw, (str, int)):
+                has_winner_year = str(has_winner_year_raw).lower() in ['true', '1', 'yes', 't']
 
-                if update_needed:
-                    logger.debug(f"Обновлен титул для собаки {dog.id}: {short_name}")
+            # Получаем winner_year
+            winner_year = None
+            winner_year_raw = title_info.get('winner_year')
+            if winner_year_raw is not None:
+                try:
+                    winner_year = int(winner_year_raw)
+                except (ValueError, TypeError):
+                    pass  # Оставляем None если не удалось преобразовать
+
+            # Подготовка данных для UPSERT
+            current_time = datetime.now()
+            title_data = {
+                'dog_id': dog.id,
+                'short_name': short_name_lower,  # Сохраняем в нижнем регистре
+                'long_name': long_name_clean[:500] if long_name_clean else None,  # Ограничиваем длину
+                'country': country_lower,  # Сохраняем в нижнем регистре
+                'is_prefix': is_prefix,
+                'has_winner_year': has_winner_year,
+                'winner_year': winner_year,
+            }
+
+            # Используем INSERT ... ON CONFLICT DO UPDATE (UPSERT)
+            stmt = insert(Title).values(**title_data)
+
+            # Определяем, какие поля обновлять при конфликте
+            update_dict = {
+                'long_name': title_data['long_name'],
+                'is_prefix': title_data['is_prefix'],
+                'has_winner_year': title_data['has_winner_year'],
+                'winner_year': title_data['winner_year'],
+            }
+
+            # Убираем None значения из update_dict (кроме winner_year)
+            update_dict = {k: v for k, v in update_dict.items()
+                           if k == 'winner_year' or v is not None}
+
+            # Выполняем UPSERT
+            stmt = stmt.on_conflict_do_update(
+                index_elements=['dog_id', 'short_name', 'country'],
+                set_=update_dict
+            )
+
+            await session.execute(stmt)
+            successful_titles += 1
+
+            # logger.debug(f"Титул сохранен: собака={dog.id}, short={short_name_lower}, country={country_lower}")
 
         except Exception as e:
-            logger.warning(f"Ошибка при сохранении титула '{title_info.get('short_name')}' для собаки {dog.id}: {e}")
-            continue
+            failed_titles += 1
+            logger.warning(
+                f"Ошибка при сохранении титула для собаки {dog.id}: {e}\n"
+                f"Данные титула: {title_info}"
+            )
+            # Продолжаем обработку остальных титулов
 
-    await session.flush()
-    # logger.info(f"Титулы успешно сохранены для собаки {dog.id}")
+    # Выполняем один flush в конце
+    try:
+        await session.flush()
+    except Exception as e:
+        logger.error(f"Ошибка при flush титулов для собаки {dog.id}: {e}")
+        raise
+
+    logger.info(f"Титулы сохранены для собаки {dog.id}: "
+                f"успешно {successful_titles}, с ошибками {failed_titles}")
+
+
+async def find_dog_cached(session: AsyncSession, zoo_hash: str = None, zooportal_id: str = None, check_session: bool = True) -> Optional[Dog]:
+    """Поиск собаки в БД с кэшированием"""
+    cache_key = None
+
+    if zoo_hash:
+        cache_key = f"db_zoo_hash:{zoo_hash}"
+    elif zooportal_id:
+        cache_key = f"db_zooportal_id:{zooportal_id}"
+
+    # if cache_key:
+    #     # Проверяем кэш БД
+    #     cached_dog_id = get_dog_db_cache(cache_key)
+    #     if cached_dog_id:
+    #         dog = await session.get(Dog, cached_dog_id)
+    #         if dog:
+    #             return dog
+
+    if cache_key:
+        # Проверяем кэш БД
+        cached_dog_id = get_dog_db_cache(cache_key)
+        if cached_dog_id:
+            # ВАЖНОЕ ИЗМЕНЕНИЕ: используем select вместо get() (чтобы, если транзакция собаки с предками откатилась, не получать ошибку)
+            result = await session.execute(
+                select(Dog).where(Dog.id == cached_dog_id)
+            )
+            dog = result.scalars().first()
+            if dog:
+                return dog
+            else:
+                # Если ID из кэша не найден в БД - очищаем кэш
+                logger.debug(f"Невалидный кэш для ключа {cache_key}, dog_id={cached_dog_id}")
+                # Дополнительно можем очистить кэш:
+                _dog_db_cache.pop(cache_key, None)
+                if hasattr(_dog_db_cache_expiry, 'pop'):
+                    _dog_db_cache_expiry.pop(cache_key, None)
+
+    # Ищем в session
+    if check_session:
+        # Смотрим все "новые" собаки в сессии
+        for obj in session.new:  # Объекты добавленные через add()
+            if isinstance(obj, Dog):
+                if zoo_hash and obj.zoo_hash == zoo_hash:
+                    return obj
+                elif zooportal_id and obj.zooportal_id == zooportal_id:
+                    return obj
+
+        # Смотрим все "грязные" (измененные) собаки
+        for obj in session.dirty:
+            if isinstance(obj, Dog):
+                if zoo_hash and obj.zoo_hash == zoo_hash:
+                    return obj
+                elif zooportal_id and obj.zooportal_id == zooportal_id:
+                    return obj
+
+
+    # Ищем в БД
+    if zoo_hash:
+        result = await session.execute(
+            select(Dog).where(Dog.zoo_hash == zoo_hash)
+        )
+        dog = result.scalars().first()
+    elif zooportal_id:
+        result = await session.execute(
+            select(Dog).where(Dog.zooportal_id == zooportal_id)
+        )
+        dog = result.scalars().first()
+    else:
+        return None
+
+    # Сохраняем в кэш БД
+    if dog and cache_key:
+        set_dog_db_cache(cache_key, dog.id, ttl=3600)  # 60 минут
+
+    return dog
+
+
+def get_integration_cache_stats() -> Dict[str, Any]:
+    """Получить статистику кэша интеграции"""
+    from utils.memory_cache import _dog_db_cache, _dog_data_cache
+
+    return {
+        "dog_db_cache_size": len(_dog_db_cache),
+        "dog_data_cache_size": len(_dog_data_cache),
+        "dog_db_cache_keys": list(_dog_db_cache.keys())[:10] if _dog_db_cache else [],
+        "dog_data_cache_keys": list(_dog_data_cache.keys())[:10] if _dog_data_cache else []
+    }

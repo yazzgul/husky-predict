@@ -5,9 +5,19 @@ import pickle
 
 class CacheService:
     def __init__(self):
+        # ВАЖНО: преобразуем settings.REDIS_URL в строку
+        redis_url = str(settings.REDIS_URL)
+
+        # print(f"Redis URL: {redis_url}")  # Для отладки
+
         self.redis = aioredis.from_url(
-            settings.REDIS_URL, decode_responses=False
+            redis_url,
+            decode_responses=False
         )
+        # self.default_ttl = 3600
+        # self.redis = aioredis.from_url(
+        #     settings.REDIS_URL, decode_responses=False
+        # )
 
     async def get(self, key: str):
         data = await self.redis.get(key)
