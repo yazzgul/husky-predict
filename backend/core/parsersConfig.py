@@ -61,11 +61,11 @@ BREEDARCHIVE_COOKIES = {
     "session_tba_v3": settings.BREEDARCHIVE_SESSION_TBA_V3 if hasattr(settings, 'BREEDARCHIVE_SESSION_TBA_V3') else "",
 }
 
-# Количество собак на странице поиска
-ZOOPORTAL_PAGE_SIZE = 11
-
-CACHE_CONFIG = {
-    'breedarchive_search_ttl': 300,  # 5 минут
-    'breedarchive_processed_ttl': 600,  # 10 минут
-    'max_cache_size': 10000,  # Максимальное количество записей
-}
+# # Количество собак на странице поиска
+# ZOOPORTAL_PAGE_SIZE = 11
+#
+# CACHE_CONFIG = {
+#     'breedarchive_search_ttl': 300,  # 5 минут
+#     'breedarchive_processed_ttl': 600,  # 10 минут
+#     'max_cache_size': 10000,  # Максимальное количество записей
+# }
